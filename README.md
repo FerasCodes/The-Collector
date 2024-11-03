@@ -4,9 +4,9 @@ The Collector a bash Generator. It categorizes commands from a JSON file and all
 
 ## Features
 
-- **Command Loading**: Reads commands from a `commands.json` file.
+- **Command Loading**: Reads commands from a `Windows_commands.json` file.
 - **Categorization**: Commands are organized into must-have, basic, and advanced categories.
-- **User-Friendly Interface**: GUI for selecting commands.
+- **User-Friendly Interface**: GUI for selecting commands or cmd using The-collector.py.
 - **Batch Script Generation**: Creates a batch file with selected commands.
 
 ## Installation
