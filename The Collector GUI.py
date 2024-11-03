@@ -10,14 +10,10 @@ def load_commands():
         return json.load(file)
 
 commands_data = load_commands()
-
-# Separate commands into categories
 must_commands = []
 basic_commands = []
 advanced_commands = []
 hashing_command = []
-
-# Classify commands based on JSON category
 for cmd in commands_data:
     if cmd["Command_Name"] == "Creating a directory":
         must_commands.append(cmd)
@@ -31,13 +27,11 @@ for cmd in commands_data:
 basic_commands.sort(key=lambda x: x["Command_Name"])
 advanced_commands.sort(key=lambda x: x["Command_Name"])
 
-# Convert CMD syntax (no conversion needed since it's for batch files)
 def convert_to_batch(command):
     if isinstance(command, list):
         return command
     return command
 
-# Create GUI
 class CommandGenerator:
     def __init__(self, root):
         self.root = root
@@ -53,7 +47,7 @@ class CommandGenerator:
         self.basic_vars = []
         self.advanced_vars = []
 
-        # Frame for Basic commands
+
         basic_frame = tk.Frame(root)
         basic_frame.grid(row=0, column=0, sticky="nsew")
         root.grid_columnconfigure(0, weight=1)
@@ -66,21 +60,21 @@ class CommandGenerator:
             chk.pack(anchor='w')
             self.basic_vars.append(var)
 
-        # Frame for Advanced commands
+
         advanced_frame = tk.Frame(root)
         advanced_frame.grid(row=0, column=1, sticky="nsew")
         root.grid_columnconfigure(1, weight=1)
 
         tk.Label(advanced_frame, text="Advanced Commands", font=("Times New Romens", 12, "bold")).grid(row=0, column=0, columnspan=4, sticky='n', pady=10)
 
-        # Create a 4-column grid layout for advanced commands, centered
+
         for index, cmd in enumerate(advanced_commands):
             var = tk.BooleanVar()
             chk = tk.Checkbutton(advanced_frame, text=cmd["Command_Name"], variable=var)
             chk.grid(row=(index // 4) + 1, column=index % 4, sticky='w', padx=10, pady=5)
             self.advanced_vars.append(var)
 
-        # Buttons frame
+
         buttons_frame = tk.Frame(root)
         buttons_frame.grid(row=1, column=0, columnspan=2, sticky="ew")
 
@@ -99,11 +93,10 @@ class CommandGenerator:
     def generate_batch(self):
         selected_commands = ["@echo off"]
 
-        # Add must-have commands first
+
         for cmd in must_commands:
             selected_commands.extend(convert_to_batch(cmd["Command"]))
 
-        # Collect selected commands
         for var, cmd in zip(self.basic_vars, basic_commands):
             if var.get():
                 selected_commands.extend(convert_to_batch(cmd["Command"]))
@@ -112,13 +105,13 @@ class CommandGenerator:
             if var.get():
                 selected_commands.extend(convert_to_batch(cmd["Command"]))
 
-        # Add hashing command last
+
         for cmd in hashing_command:
             selected_commands.extend(convert_to_batch(cmd["Command"]))
 
         selected_commands.append("@pause")
 
-        # Ask user for save location
+
         file_path = filedialog.asksaveasfilename(defaultextension=".bat", filetypes=[("Batch files", "*.bat")])
         if file_path:
             with open(file_path, "w") as file:
@@ -126,7 +119,7 @@ class CommandGenerator:
 
             messagebox.showinfo("Success", f"Batch script generated as {file_path}")
 
-# Run the application
+
 root = tk.Tk()
 app = CommandGenerator(root)
 root.mainloop()
