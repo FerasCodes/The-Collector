@@ -13,8 +13,8 @@ The Collector a bash Generator. It categorizes commands from a JSON file and all
 
 1. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/FerasCodes/The-Collector.git
+   cd The-Collector
 2. **Ensure Python is Installed**:
 The application requires Python 3.x.
 
