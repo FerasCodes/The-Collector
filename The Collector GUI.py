@@ -5,7 +5,7 @@ import os
 
 # Load JSON data from commands.json
 def load_commands():
-    file_path = os.path.join(os.path.dirname(__file__), "commands.json")
+    file_path = os.path.join(os.path.dirname(__file__), "src", "commands.json")
     with open(file_path, "r") as file:
         return json.load(file)
 
