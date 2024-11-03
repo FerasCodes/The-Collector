@@ -49,7 +49,7 @@ Click "Generate Batch" to create your batch file.
     "category": "Advance"
   }
 ]
-
+```json
 
 ## File Structure
 
