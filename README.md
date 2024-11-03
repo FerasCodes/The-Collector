@@ -54,7 +54,7 @@ Click "Generate Batch" to create your batch file.
 ## File Structure
 
 - `the_collector.py`: Main application script.
-- `commands.json`: JSON file containing command definitions.
+- `Windows_commands.json`: JSON file containing command definitions.
 
 ## GUI 
 ![image](https://github.com/user-attachments/assets/8affe9b1-bdb8-4c5a-80db-f2799774258d)
