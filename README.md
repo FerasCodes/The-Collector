@@ -1,53 +1,20 @@
 # The-Collector
-The Collector is a Python application that generates batch scripts using json file a source. It categorizes commands from a JSON file and allows users to select which commands to include in the generated script.
+# The Collector
 
-Features
-Command Loading: Reads commands from a commands.json file.
-Categorization: Commands are organized into must-have, basic, and advanced categories.
-User-Friendly Interface: GUI for selecting commands.
-Batch Script Generation: Creates a batch file with selected commands.
-Installation
-Clone the Repository:
-bash
+The Collector is a Python application that generates batch scripts using a GUI interface. It categorizes commands from a JSON file and allows users to select which commands to include in the generated script.
 
-Copy
-git clone <repository-url>
-cd <repository-directory>
-Ensure Python is Installed:
+## Features
+
+- **Command Loading**: Reads commands from a `commands.json` file.
+- **Categorization**: Commands are organized into must-have, basic, and advanced categories.
+- **User-Friendly Interface**: GUI for selecting commands.
+- **Batch Script Generation**: Creates a batch file with selected commands.
+
+## Installation
+
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+2. **Ensure Python is Installed**:
 The application requires Python 3.x.
-Usage
-Prepare commands.json:
-Ensure commands.json is in the same directory as the script. This file should define the commands and their categories.
-Run the Application:
-bash
-
-Copy
-python the_collector.py
-Interact with the GUI:
-Select basic and advanced commands.
-Use "Select All" or "Select None" for convenience.
-Click "Generate Batch" to create your batch file.
-Example commands.json Structure
-json
-
-Copy
-[
-  {
-    "Command_Name": "Creating a directory",
-    "Command": ["mkdir example"],
-    "category": "Basic"
-  },
-  {
-    "Command_Name": "Hashing generated files",
-    "Command": ["certutil -hashfile example.txt SHA256"],
-    "category": "Advance"
-  }
-]
-File Structure
-the_collector.py: Main application script.
-commands.json: JSON file containing command definitions.
-Contributing
-Contributions are welcome! Please submit issues or pull requests.
-
-License
-This project is licensed under the MIT License.
