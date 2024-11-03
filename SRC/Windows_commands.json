@@ -1,0 +1,610 @@
+[
+  {
+    "Command_Name": "Creating a directory",
+    "terminal_type": "CMD",
+	  "category": "Must",
+    "Command": [
+      "echo creating \"%USERPROFILE%\\Desktop\\%computername%\"",
+      "mkdir %USERPROFILE%\\Desktop\\%computername%",
+      "cd %USERPROFILE%\\Desktop\\%computername%",
+      "echo Done."
+    ]
+  },
+  {
+    "Command_Name": "Network information",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting Network information",
+      "ipconfig /all > %USERPROFILE%\\Desktop\\%computername%\\\"%computername%\"_ipconfig.txt",
+      "netsh interface show interface > %USERPROFILE%\\Desktop\\%computername%\\\"%computername%\"_portstatus.txt",
+      "netstat -an > %USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_network_connections.txt",
+      "netsh interface ipv4 show interfaces > %USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_NetworkInterfaces.txt"
+    ]
+  },
+  {
+  "Command_Name": "Local users and password policy",
+  "terminal_type": "CMD/powershell",
+  "category": "Advance",
+  "Command": [
+    "echo Collecting user information and password policy",
+    "wmic useraccount list full > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_useraccounts.txt\"",
+    "net users > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_netuser.txt\"",
+    "net accounts > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_PWDPolicy.txt\"",
+    "for /f \"tokens=1-3 skip=4\" %%a in ('type \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_netuser.txt\"') do (",
+    "  net user %%a > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_%%a.txt\" 2>&1",
+    "  net user %%b > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_%%b.txt\" 2>&1",
+    "  net user %%c > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_%%c.txt\" 2>&1",
+    ")",
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-LocalGroupMember -Group 'Administrators' | Select-Object Name, SID, PrincipalSource, Description | Export-Csv -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_Admin_List.csv' -NoTypeInformation\"",
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-LocalGroup | Select-Object * | Export-Csv -Encoding UTF8 -NoTypeInformation -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_Groups.csv'\"",
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"New-Item -Path C:\\\\$(hostname) -ItemType Directory -Force; Get-WmiObject -Class Win32_UserAccount | Select-Object AccountType, Caption, Domain, Name, FullName, InstallDate, SID, Status | Export-Csv -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_User_List.csv' -NoTypeInformation\"",
+    "echo Done."
+  ]
+  },
+  {
+    "Command_Name": "Audit policies",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+    "echo Collecting Audit Policy", 
+	"auditpol /get /category:* > %USERPROFILE%\\Desktop\\%computername%\\%computername%_audit.txt"
+	]
+  },
+  {
+    "Command_Name": "Windows features",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting windows features",
+      "dism /online /get-features > %USERPROFILE%\\Desktop\\%computername%\\%computername%_features.txt"
+    ]
+  },
+  {
+    "Command_Name": "System info",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting system information",
+      "systeminfo > %USERPROFILE%\\Desktop\\%computername%\\%computername%_sysinfo.txt"
+    ]
+  },
+  {
+    "Command_Name": "Schedule Tasks and running tasks",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting schedule Tasks",
+      "schtasks /query /fo LIST /v > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ScheduledTasks.txt"
+    ]
+  },
+  {
+    "Command_Name": "Installed Drivers",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting Installed Drivers",
+      "driverquery > %USERPROFILE%\\Desktop\\%computername%\\%computername%_InstalledDrivers.txt"
+    ]
+  },
+  {
+    "Command_Name": "Installed Software",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting Installed Software",
+      "wmic product get name,version > %USERPROFILE%\\Desktop\\%computername%\\%computername%_proglist.txt"
+    ]
+  },
+  {
+    "Command_Name": "Windows Patches",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting windows patches information",
+      "wmic qfe list full /format:table > %USERPROFILE%\\Desktop\\%computername%\\%computername%_patch.txt"
+    ]
+  },
+  {
+    "Command_Name": "Services",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting windows services",
+      "wmic service list full /format:table > %USERPROFILE%\\Desktop\\%computername%\\%computername%_wmic.txt"
+    ]
+  },
+  {
+    "Command_Name": "Windows Events",
+    "terminal_type": "CMD",
+    "category": "Basic",
+    "Command": [
+        "echo Collecting windows events",
+        "for %%G in (System Application Security Setup ForwardedEvents) do (",
+        "  wevtutil epl %%G \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_%%G.evtx\"",
+        ")"
+    ]
+  },
+  {
+    "Command_Name": "Registry Keys",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting reg info of \"%computername%\"",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\ /v NoDriveTypeAutoRun > %USERPROFILE%\\Desktop\\%computername%\\%computername%_AutoPlay.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\cdrom /v Start > %USERPROFILE%\\Desktop\\%computername%\\%computername%_CD.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\USBSTOR /v Start > %USERPROFILE%\\Desktop\\%computername%\\%computername%_USB.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters /v * > %USERPROFILE%\\Desktop\\%computername%\\%computername%_NTPReg.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WINEVT\\Channels\\Microsoft-Windows-DriverFrameworks-UserMode/Operational /v Enabled > %USERPROFILE%\\Desktop\\%computername%\\%computername%_USBTrace.txt",
+      "(reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v AutoAdminLogon & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v AutoLogonSID & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DefaultUserName & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DisableLockWorkstation & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v LastUsedUsername & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v Shell) > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_AutoLogon.txt\"",
+      "reg query \"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\SSL 2.0\\Server\" /v Enabled > %USERPROFILE%\\Desktop\\%computername%\\%computername%_SSL2.txt",
+      "reg query \"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\SSL 3.0\\Server\" /v Enabled > %USERPROFILE%\\Desktop\\%computername%\\%computername%_SSL3.txt"
+    ]
+  },
+  {
+    "Command_Name": "Group and local policy",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Group Policy",
+      "gpresult /V >\"C:\\Users\\Public\\Documents\\%computername%_gpresult.txt\"",
+      "move \"C:\\Users\\Public\\Documents\\%computername%_gpresult.txt\" %USERPROFILE%\\Desktop\\%computername%",
+      "echo Exporting local security policy",
+      "secedit /export /cfg %USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_LocalSecurityPolicy.txt"
+    ]
+  },
+  {
+    "Command_Name": "McAfee",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee",
+      "echo Collecting McAfee DAT Version of \"%computername%\"",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\McAfee\\AVEngine /v AVDatVersion > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeVSEDATVersion.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\McAfee\\AVSolution\\DS\\DS /v dwContentMajorVersion > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeENSDATVersion.txt",
+      "echo Done.",
+      "echo Collecting McAfee DAT Date of \"%computername%\"",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\McAfee\\AVEngine /v AVDatDate > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeVSEDATDate.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\McAfee\\AVSolution\\DS\\DS /v szContentCreationDate > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeENSDATDate.txt",
+      "echo Done.",
+      "echo Collecting McAfee Logs of \"%computername%\"",
+      "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsVSE",
+      "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsENS",
+      "copy C:\\ProgramData\\McAfee\\DesktopProtection\\* %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsVSE\\",
+      "copy \"C:\\ProgramData\\McAfee\\Endpoint Security\\Logs\\*\" %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsENS\\"
+    ]
+  },
+  {
+    "Command_Name": "Symantec",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting Symantec Info of \"%computername%\"",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\"",
+      "echo Collecting Symantec Endpoint Protection Version of %computername%",
+      "reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Symantec\\Symantec Endpoint Protection\\CurrentVersion\" /v ProductVersion > \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\%computername%_SymantecVersion.txt\"",
+      "echo Done.",
+      "echo Collecting Symantec Virus Definition Version of \"%computername%\"",
+      "reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Symantec\\Symantec Endpoint Protection\\AV\\PatternManager\" /v PatternFile > \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\%computername%_SymantecVirusDefVersion.txt\"",
+      "echo Done.",
+      "echo Collecting Symantec Virus Definition Date of \"%computername%\"",
+      "reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Symantec\\Symantec Endpoint Protection\\AV\\PatternManager\" /v PatternFileDate > \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\%computername%_SymantecVirusDefDate.txt\"",
+      "echo Done.",
+      "echo Collecting Symantec Logs of \"%computername%\"",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\SymantecLogs\"",
+      "copy \"C:\\ProgramData\\Symantec\\Symantec Endpoint Protection\\Logs\\*\" \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\SymantecLogs\\\"",
+      "echo Done."
+    ]
+  },
+  {
+    "Command_Name": "Time",
+    "terminal_type": "CMD",
+	  "category": "Basic",
+    "Command": [
+      "echo Collecting time configuration",
+      "w32tm /query /status > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntp.txt",
+      "w32tm /query /peers > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntppeers.txt",
+      "w32tm /monitor > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntpmonitor.txt"
+    ]
+  },
+  {
+    "Command_Name": "Software hive",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting software hive",
+      "reg.exe save HKLM\\SOFTWARE \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SOFTWARE\""
+    ]
+  },
+  {
+    "Command_Name": "System hive",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting System hive",
+      "reg.exe save HKLM\\SYSTEM \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SYSTEM\""
+    ]
+  },
+  {
+    "Command_Name": "SAM hive",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting SAM hive",
+      "reg.exe save HKLM\\SAM \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SAM\""
+    ]
+  },
+  {
+    "Command_Name": "Security hive",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Security hive",
+      "reg.exe save HKLM\\SECURITY \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SECURITY\""
+    ]
+  },
+  {
+    "Command_Name": "NTUser",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting NTUser hive",
+      "reg.exe save \"HKCU\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_ntuser.dat\""
+    ]
+  },
+  {
+    "Command_Name": "Shimcache and Amcache",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\AppCompatCache\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_shimcache.dat\"",
+      "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\bam\\UserSettings\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_amcache.dat\""
+    ]
+  },
+  {
+    "Command_Name": "Hardware hive",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Hardware hive",
+      "reg.exe save HKLM\\HARDWARE \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_HARDWARE\""
+    ]
+  },
+  {
+    "Command_Name": "Active Drives",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting active drivers information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe Get-PSDrive >%USERPROFILE%\\Desktop\\%computername%\\%computername%_activeDrivers.txt"
+    ]
+  },
+  {
+    "Command_Name": "ARP information",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting ARP caches information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe Get-NetNeighbor >%USERPROFILE%\\Desktop\\%computername%\\%computername%_ARPcache.txt",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-NetNeighbor | Where-Object {$_.AddressFamily -eq 'IPv4'} | Select-Object InterfaceAlias, IPAddress, LinkLayerAddress, State | Export-Csv -Encoding UTF8 -NoTypeInformation -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_ARP_Table.csv'\""
+    ]
+  },
+  {
+    "Command_Name": "Bitlocker information",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Bitlocker information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-BitLockerVolume -MountPoint %sourceDriveLetter% | Select-Object -ExpandProperty KeyProtector | Format-List | Out-File -FilePath %USERPROFILE%\\Desktop\\%computername%\\%computername%_Bitlocker_key.txt\"",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-BitLockerVolume -Mountpoint %sourceDriveLetter% | Format-List | Out-File -FilePath %USERPROFILE%\\Desktop\\%computername%\\%computername%_Bitlocker_status.txt\""
+    ]
+  },
+  {
+    "Command_Name": "Windows defender exclusions",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Windows defender exclusions",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem 'HKLM:\\SOFTWARE\\Microsoft\\Windows Defender\\Exclusions'\" > %USERPROFILE%\\Desktop\\%computername%\\%computername%_Defender_exclusions.txt"
+    ]
+  },
+  {
+    "Command_Name": "DLL list",
+    "terminal_type": "powershell",
+    "category": "Advance",
+    "Command": [
+        "echo Collecting DLL for each process",
+        "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-Process | Format-List ProcessName, @{l='Modules';e={($_.Modules | Out-String)}} | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_DLL_list.txt')) }\""
+    ]
+  },
+  {
+    "Command_Name": "DNS information",
+    "terminal_type": "powershell",
+    "category": "Advance",
+    "Command": [
+        "echo Collecting DNS information",
+        "powershell.exe -Command \"Get-DnsClientCache | Select-Object Entry, Name, Status, Type, TimeToLive, Data | Export-Csv -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_DNS_cache.CSV\\\"\"",
+        "powershell.exe -Command \"Get-DnsClientCache | Select Entry, Name, Type, Status, Section, TimeToLive, DataLength, Data | Export-Csv -Encoding UTF8 -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_DNS_Client_cache.CSV\\\"\"",
+        "powershell.exe -Command \"Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=TRUE' | Select-Object Index, ServiceName, Description, MacAddress, @{Name='IpAddress';Expression={$_.IpAddress -join '; '}}, @{Name='DefaultIPGateway';Expression={$_.DefaultIPGateway -join '; '}}, DnsHostname, DnsDomain, DhcpEnabled, DhcpServer, DHCPLeaseObtained | Sort-Object Index | Export-Csv -Encoding UTF8 -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_Network_Configuration.csv\\\"\""
+    ]
+  },
+  {
+    "Command_Name": "Docker information",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Docker information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$filePath = '$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_docker_container_info.txt'; $dockerOutput = (docker version | Out-String).TrimEnd() + [System.Environment]::NewLine + [System.Environment]::NewLine + (docker ps --all --format 'ID: {{.ID}} | Name: {{.Names}} | Image: {{.Image}} | Size: {{.Size}} | Status: {{.Status}} | Command: {{.Command}}' | Out-String).TrimEnd(); Set-Content -Path $filePath -Value $dockerOutput -Encoding UTF8;\""
+    ]
+  },
+  {
+    "Command_Name": "PIPE information",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting pipe information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem -Path '\\\\.\\pipe\\' | Sort-Object Length | Select-Object FullName, Length, IsReadOnly, Exists, CreationTime, LastAccessTime | Export-Csv -Encoding UTF8 -NoTypeInformation -Path '$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Pipe_Info.csv'\""
+    ]
+  },
+  {
+    "Command_Name": "Routing table",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting routing table",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetRoute | Select-Object DestinationPrefix, NextHop, InterfaceAlias, RouteMetric, Protocol, InterfaceIndex, AddressFamily | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Routing_Table.csv')) }\""
+    ]
+  },
+  {
+    
+  "Command_Name": "Network share",
+  "terminal_type": "powershell",
+  "category": "Advance",
+  "Command": [
+    "echo Collecting network share information",
+     "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-SMBShare | Select-Object Name, Volume, Path, Description | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Share.csv')) }\"",
+    "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-WmiObject -Class Win32_Share | Select-Object Name, Path, Description | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Shares.csv')) }\""
+  ]
+  },
+  {
+    "Command_Name": "Network adapter and network configuration information",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Network adapter and network configuration information ",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetAdapter | Select-Object Name, Status, MacAddress, PhysicalMediaType, DriverName, DriverInformation, DriverVersion, DriverDescription, SystemName, PnPDeviceID | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Adapters.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-NetIPConfiguration | Select-Object InterfaceAlias, InterfaceIndex, InterfaceDescription, @{Name='NetProfile';Expression={$_.NetProfile.Name}}, @{Name='IPv4Address';Expression={$_.IPv4Address -join ','}}, @{Name='IPv4DefaultGateway';Expression={$_.IPv4DefaultGateway -join ','}}, @{Name='DNSServer';Expression={$_.DNSServer -join ','}} | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_IP_Configuration.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-SMBMapping | Select LocalPath, RemotePath, Status, RequireIntegrity, RequirePrivacy, UseWriteThrough | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_SMB_Mapping.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-SMBOpenFile | Select FileId, SessionId, Path, ShareRelativePath, ClientComputerName, ClientUsername | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_SMB_Open_Files.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-SMBSession | Select SessionId, ClientComputerName, ClientUserName, NumOpens | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_SMB_Session.csv')) }\""
+    ]
+  },
+  {
+    "Command_Name": "Active network connections",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+        "echo Collecting active network connections",
+        "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State, AppliedSetting, OwningProcess | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Active_Network_Connections.csv')) }\""
+    ]
+  },
+  {
+    
+    "Command_Name": "Network statistics",
+    "terminal_type": "powershell",
+    "category": "Advance",
+    "Command": [
+        "echo Collecting network statistics",
+        "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetUDPEndpoint | Select-Object LocalAddress, LocalPort, OwningProcess | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_UDP_Endpoints.csv')) }\"",
+    "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-NetAdapterStatistics | Select-Object Name, ReceivedUnicastPackets, ReceivedBroadcastPackets, ReceivedDiscardedPackets, OutboundUnicastPackets, OutboundBroadcastPackets, OutboundDiscardedPackets | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Adapter_Statistics.csv')) }\""
+    ]
+  },
+  {
+      "Command_Name": "CMDlist",
+      "terminal_type": "powershell",
+      "category": "Advance",
+      "Command": [
+        "echo Collecting cmdlist",
+        "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-WmiObject -Class Win32_Process | Select-Object Name, ProcessId, CommandLine | Sort-Object Name | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\' + $env:COMPUTERNAME + '_cmdline.csv'))\""
+      ]
+  },
+  {
+
+  "Command_Name": "RecycleBin",
+  "terminal_type": "powershell",
+  "category": "Advance",
+  "Command": [
+    "echo Collecting recycleBin",
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$shell = New-Object -ComObject Shell.Application; $recycleBin = $Shell.Namespace(0xA); $recycled = @(); $recycleBin.Items() | ForEach-Object { $originalPath = $_.ExtendedProperty('{9B174B33-40FF-11D2-A27E-00C04FC30871} 2'); $originalPath = (Join-Path -Path $originalPath -ChildPath $_.Name); $recycledPath = $_.Path; if (Test-Path $recycledPath -PathType Container) { $fileType = 'Directory' } else { $fileType = 'File' }; $sha1 = (Get-FileHash -Algorithm SHA1 -Path $recycledPath -ErrorAction SilentlyContinue).Hash; $removalDate = $_.ExtendedProperty('{9B174B33-40FF-11D2-A27E-00C04FC30871} 3'); $recycleSid = $recycledPath.Split('\\')[2]; $objSID = New-Object System.Security.Principal.SecurityIdentifier($recycleSid); $userName = $objSID.Translate([System.Security.Principal.NTAccount]).Value; $properties = [ordered]@{ 'Removal Date' = $removalDate; 'Username' = $userName; 'Recycle Bin Path' = $recycledPath; 'Original Path' = $originalPath; 'File Name' = $_.Name; 'File Type' = $fileType; 'SHA1' = $sha1 }; $recycled += New-Object psobject -Property $properties }; [System.Runtime.InteropServices.Marshal]::ReleaseComObject($shell) | Out-Null; [System.GC]::Collect(); [System.GC]::WaitForPendingFinalizers(); $shell = $null; $csvPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\' + $env:COMPUTERNAME + '_RecycleBin.csv'); $recycled | Export-Csv -Encoding UTF8 -NoTypeInformation -Path $csvPath\""
+    ]
+  },
+  {
+    "Command_Name": "Startup commands",
+    "terminal_type": "powershell",
+    "category": "Advance",
+    "Command": [
+      "echo Collecting startup commands",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-CimInstance -Class Win32_StartupCommand | Format-Table -Property Name, Command, User, Location -Wrap | Out-File -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\' + $env:COMPUTERNAME + '_startup_commands.txt'))\""
+    ] 
+  },
+  {
+      "Command_Name": "TCP connection info",
+  "terminal_type": "powershell",
+  "category": "Advance",
+  "Command": [
+    "echo Collecting TCP connections info",
+    "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$connections = @(); if($PSVersionTable.PSVersion.Major -lt 5){ Get-NetTCPConnection | ForEach-Object { $connections += New-Object psobject -Property ([ordered]@{ 'State'=$_.State; 'DNSCache'=(Get-DnsClientCache -Data $_.RemoteAddress -ea 0).Entry; 'RemoteAddress'=$_.RemoteAddress; 'RemotePort'=$_.RemotePort }) } } else{ Get-NetTCPConnection | ForEach-Object { try { $process = Get-Process -Id $_.OwningProcess -ErrorAction Stop; $connections += New-Object psobject -Property ([ordered]@{ 'State'=$_.State; 'DNSCache'=(Get-DnsClientCache -Data $_.RemoteAddress -ea 0).Entry; 'UserName'=$process.UserName; 'Process Name'=$process.Name; 'Process Path'=$process.Path; 'OwningProcess'=$_.OwningProcess; 'LocalAddress'=$_.LocalAddress; 'LocalPort'=$_.RemotePort; 'RemoteAddress'=$_.RemoteAddress; 'RemotePort'=$_.LocalPort }) } catch { Write-Warning \\\"Process with ID $($_.OwningProcess) not found.\\\" } } }; $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath }; $outputPath = Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_TCPConnections.csv'); $connections | Export-Csv -NoTypeInformation -Path $outputPath\""
+  ]
+  },
+  {
+    "Command_Name": "NetBios sessions",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting",
+      "C:\\Windows\\System32\\nbtstat.exe -s > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_netbios_sessions.txt"
+    ]
+  },
+  {
+    "Command_Name": "Net File",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting",
+      "C:\\Windows\\System32\\net.exe File > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_net_File.txt"
+    ]
+  },
+  {
+    "Command_Name": "Trusted Domain",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting trusted domain information",
+      "C:\\Windows\\System32\\nltest.exe /trusted_domains > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Trusted_Domain.txt"
+    ]
+  },
+  {
+    "Command_Name": "RDP sessions",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting RDP sessions information",
+      "C:\\Windows\\System32\\qwinsta.exe /counter > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_RDP_sessions.txt"
+    ]
+  },
+  {
+    "Command_Name": "Windows Firewall",
+    "terminal_type": "powershell",
+    "category": "Advance",
+    "Command": [
+      "echo Collecting Firewall information",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall show currentprofile | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_CurrentProfile.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall firewall show rule name=all | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_AllRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall firewall show rule name=all dir=in | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_InboundRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall firewall show rule name=all dir=out | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_OutboundRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall show global | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_Settings.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall consec show rule name=all | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_ConsecRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-NetFirewallRule | Select-Object DisplayName, Description, Enabled, Direction, Action, Profile, Platform, Group, InterfaceType | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_Rules.csv')) }\""
+    ]
+  },
+  {
+    "Command_Name": "Prefetch files",
+    "terminal_type": "powershell",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting prefetch",
+      "powershell -Command \"& { $dest = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\PrefetchFiles'); if (-Not (Test-Path -Path $dest)) { New-Item -ItemType Directory -Path $dest }; xcopy 'C:\\Windows\\Prefetch\\*' $dest /i /y }\"",
+      "powershell -Command \"& { $output = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\Prefetch_Files.txt'); dir $dest > $output }\""
+    ]
+  },
+  {
+    "Command_Name": "Recent Document",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting recent files information",
+      "xcopy \"%APPDATA%\\Microsoft\\Windows\\Recent\" \"$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Recent\" /E /I"
+    ]
+  },
+  {
+    "Command_Name": "Jump list",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting jumplist information",
+      "xcopy \"%APPDATA%\\Microsoft\\Windows\\Recent\\AutomaticDestinations\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_JumpLists\" /E /I"
+    ]
+  },
+  {
+    "Command_Name": "Shellbags",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting shellbags information",
+      "reg save \"HKCU\\Software\\Microsoft\\Windows\\Shell\\BagMRU\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_shellbags.dat\"",
+      "reg save \"HKCU\\Software\\Microsoft\\Windows\\Shell\\Bags\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_shellbags_bags.dat\""
+    ]
+  },
+  {
+    "Command_Name": "Web Browser History and Cache",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting chrome data",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeHistory\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeCache\\\" /E /I /Y /D",
+      "echo Collecting browser data",
+      "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeHistory\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeCache\\\" /E /I /Y /D"
+    ]
+  },
+  {
+    "Command_Name": "Host file",
+    "terminal_type": "CMD",
+    "category": "Advance",
+    "Command": [
+      "echo Collecting host file information",
+      "xcopy \"%SystemRoot%\\System32\\drivers\\etc\\hosts\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_hosts\\\" /Y /D /F"
+    ]
+  },
+  {
+    "Command_Name": "MFT",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting MFT information",
+      "fsutil usn readjournal C: > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_mft.txt\""
+    ]
+  },
+  {
+    "Command_Name": "AD Sync",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting Active Directory sync information",
+      "repadmin /syncall /e /d /A > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ADsync.txt\""
+    ]
+  },
+  {
+    "Command_Name": "Wifi Collector",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo collecting wifi information",
+      "setlocal enabledelayedexpansion",
+      "set \"outputPath=%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_wifi_passcode.txt\"",
+      "mkdir \"C:\\%COMPUTERNAME%\" 2>nul",
+      "echo Wi-Fi Profiles and Passwords on %COMPUTERNAME% > \"%outputPath%\"",
+      "for /f \"skip=9 tokens=2 delims=:\" %%i in ('netsh wlan show profiles') do (",
+      "   set \"profile=%%i\"",
+      "   set \"profile=!profile:~1!\"",
+      "   echo Profile: !profile! >> \"%outputPath%\"",
+      "   netsh wlan show profile name=\"!profile!\" key=clear | findstr \"Key Content\" >> \"%outputPath%\"",
+      "   echo. >> \"%outputPath%\"",
+      ")",
+      "endlocal"
+    ]
+  },
+  {
+    "Command_Name": "Task list",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting running process",
+      "tasklist > %USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_Tasklist.txt"
+    ]
+  },
+  {
+    "Command_Name": "Hashing generated files",
+    "terminal_type": "CMD",
+	  "category": "Must",
+    "Command": [
+      "echo Generating hashes for collected files...",
+      "cd C:\\%COMPUTERNAME%",
+      "for %%f in (*.*) do (",
+      "   certutil -hashfile \"%%f\" SHA256 > \"%%~nf_hash.txt\"",
+      ")",
+      "echo Hash generation completed."
+    ]
+  }
+]
