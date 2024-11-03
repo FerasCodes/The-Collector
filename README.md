@@ -1,6 +1,5 @@
 # The-Collector
-The Collector
-The Collector is a Python application that generates batch scripts using a GUI interface. It categorizes commands from a JSON file and allows users to select which commands to include in the generated script.
+The Collector is a Python application that generates batch scripts using json file a source. It categorizes commands from a JSON file and allows users to select which commands to include in the generated script.
 
 Features
 Command Loading: Reads commands from a commands.json file.
