@@ -56,9 +56,13 @@ Click "Generate Batch" to create your batch file.
 - `the_collector.py`: Main application script.
 - `commands.json`: JSON file containing command definitions.
 
+## GUI 
+![image](https://github.com/user-attachments/assets/8affe9b1-bdb8-4c5a-80db-f2799774258d)
+
+
 ## Contributing
 
-Contributions are welcome! Please submit issues or pull requests.
+This repository serves as a place for community to add their source in the json file for use with The-Collector
 
 ## License
 
