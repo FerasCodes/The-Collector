@@ -4,7 +4,7 @@ import os
 import argparse
 
 def load_commands():
-    file_path = os.path.join(os.path.dirname(__file__), "src", "Windows_commands.json")
+    file_path = os.path.join(os.path.dirname(__file__), "plugins", "Windows_commands.json")
     with open(file_path, "r") as file:
         return json.load(file)
 
