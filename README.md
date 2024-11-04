@@ -1,6 +1,6 @@
 # The-Collector
 
-The Collector a bash Generator. It categorizes commands from a JSON file and allows users to select which commands to include in the generated bash script.
+The Collector is a bash generator. It categorizes commands from a JSON file and allows users to select which commands to include in the generated bash script.
 
 ## Features
 
