@@ -34,23 +34,36 @@ Use "Select All" or "Select None" for convenience.
 Click "Generate Batch" to create your batch file.
 
 
-## Example `commands.json` Structure
+## Example `Windows_commands.json` Structure and how to add your own commands
 
 ```json
 [
   {
     "Command_Name": "Creating a directory",
-    "Command": ["mkdir example"],
-    "category": "Basic"
+    "Category": "Must",
+    "Command": []
   },
   {
-    "Command_Name": "Hashing generated files",
-    "Command": ["certutil -hashfile example.txt SHA256"],
-    "category": "Advance"
+    "Command_Name": "Network information",
+    "Category": "Basic",
+    "Command": []
   }
 ]
 ```
+1- Add your command within the "Command" array for the relevant "Command_Name".
+2- Ensure each command is a string and placed within quotes.
 
+Example:
+
+```json
+{
+  "Command_Name": "List directory contents",
+  "Category": "Optional",
+  "Command": [
+    "dir"
+    ]
+}
+```
 ## File Structure
 
 - `the_collector.py`: Main application script.
