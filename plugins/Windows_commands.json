@@ -530,12 +530,19 @@
     "terminal_type": "CMD",
 	  "category": "Advance",
     "Command": [
-      "echo Collecting chrome data",
-      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeHistory\\\" /I /Y /D",
-      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeCache\\\" /E /I /Y /D",
-      "echo Collecting browser data",
-      "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeHistory\\\" /I /Y /D",
-      "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeCache\\\" /E /I /Y /D"
+    "echo Collecting Chrome data",
+    "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeHistory\\\" /I /Y /D",
+    "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeCache\\\" /E /I /Y /D",
+    "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cookies\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeCookies\\\" /I /Y /D",
+    "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Bookmarks\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeBookmarks\\\" /I /Y /D",
+    "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Login Data\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeLoginData\\\" /I /Y /D",
+    "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Preferences\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromePreferences\\\" /I /Y /D",
+    "echo Collecting Edge data",
+    "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeHistory\\\" /I /Y /D",
+    "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeCache\\\" /E /I /Y /D",
+    "echo Collecting Firefox data",
+    "xcopy \"%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\places.sqlite\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_FirefoxHistory\\\" /I /Y /D",
+    "xcopy \"%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cache2\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_FirefoxCache\\\" /E /I /Y /D"
     ]
   },
   {
