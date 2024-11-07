@@ -20,15 +20,18 @@ The application requires Python 3.x.
 
 ## Usage
 
-1. **Prepare `commands.json`**:
-   - Place `commands.json` in the same directory as the script.
-   - Ensure it contains commands and their categories.
-
 2. **Run the Application**:
+  a. For the GUI 
    ```bash
-   python the_collector.py
+   python The Collector GUI.py
 
-3. **Interact with the GUI**:
+  b. For the terminal 
+  ```bash
+  python The-Collector.py
+
+```
+
+4. **Interact with the GUI**:
 Select basic and advanced commands.
 Use "Select All" or "Select None" for convenience.
 Click "Generate Batch" to create your batch file.
