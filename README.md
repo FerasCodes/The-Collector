@@ -20,12 +20,12 @@ The application requires Python 3.x.
 
 ## Usage
 
-2. **Run the Application**:
+1. **Run the Application**:
    
   a. For the GUI 
    ```bash
    python The Collector GUI.py
-
+```
   b. For the terminal 
   ```bash
   python The-Collector.py
