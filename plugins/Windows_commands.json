@@ -615,22 +615,19 @@
     "terminal_type": "CMD",
 	  "category": "Must",
     "Command": [
-      "echo Creating directory...",
-      "mkdir \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
-      "cd \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
-      "echo Done.",
-      "echo Zipping the directory...",
-      "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip'\"",
-      "echo Generating hash for the zip file...",
-      "certutil -hashfile \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\" SHA256 > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt\"",
-      "echo Creating final zip with hash...",
-      "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip', '%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.final.zip'\"",
-      "echo Cleaning up intermediate files...",
-      "del \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\"",
-      "del \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt\"",
-      "rmdir /S /Q \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
-      "move \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.final.zip\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\"",
-      "echo Process completed."
+    "echo Zipping the directory...",
+    "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip'\"",
+    "echo Generating hash for the zip file...",
+    "certutil -hashfile \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\" SHA256 > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt\"",
+    "echo Creating final zip with hash...",
+    "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip', '%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.final.zip'\"",
+    "echo Cleaning up intermediate files...",
+    "del \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\"",
+    "del \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt\"",
+    "timeout /t 5 > nul",
+    "rmdir /S /Q \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\" || echo Failed to delete folder",
+    "move \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.final.zip\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\"",
+    "echo Process completed."
     ]
   }
 ]
