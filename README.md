@@ -81,6 +81,10 @@ Example:
 
 This repository serves as a place for community to add their source in the json file for use with The-Collector
 
+## Acknowledgments
+
+I would like to thank Eric Zimmerman for allowing me to include MFTECmd in this repository. 
+
 ## License
 
 This project is licensed under the MIT License.
