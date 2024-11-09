@@ -2,6 +2,7 @@
 import json
 import os
 import argparse
+import shutil
 
 def load_commands():
     file_path = os.path.join(os.path.dirname(__file__), "plugins", "Windows_commands.json")
@@ -32,8 +33,18 @@ for cmd in commands_data:
 basic_commands.sort(key=lambda x: x["Command_Name"])
 advanced_commands.sort(key=lambda x: x["Command_Name"])
 
-def generate_batch_file(selected_basic, selected_advanced, file_path):
+def copy_modules_to_folder(folder_path):
+    source_folder = os.path.join(os.path.dirname(__file__), "modules")
+    destination_folder = os.path.join(folder_path, "modules")
+    shutil.copytree(source_folder, destination_folder)
+
+def generate_batch_file(selected_basic, selected_advanced, folder_name):
+    folder_path = os.path.abspath(folder_name)
+    os.makedirs(folder_path, exist_ok=True)
+    
+    batch_file_path = os.path.join(folder_path, f"{os.path.basename(folder_name)}.bat")
     selected_commands = ["@echo off"]
+    
     for cmd in must_commands:
         selected_commands.extend(convert_to_batch(cmd["Command"]))
     for cmd in selected_basic:
@@ -43,8 +54,12 @@ def generate_batch_file(selected_basic, selected_advanced, file_path):
     for cmd in hashing_command:
         selected_commands.extend(convert_to_batch(cmd["Command"]))
     selected_commands.append("@pause")
-    with open(file_path, "w") as file:
+    
+    with open(batch_file_path, "w") as file:
         file.write("\n".join(selected_commands))
+
+    copy_modules_to_folder(folder_path)
+    print(f"Batch script and modules copied to {folder_path}")
 
 def list_commands():
     basic_list = "\n".join(f"{i+1}. {cmd['Command_Name']}" for i, cmd in enumerate(basic_commands))
@@ -58,7 +73,7 @@ def main():
     )
     parser.add_argument('--basic', nargs='*', type=int, default=[], help='Select basic commands by index (e.g., 1 2 3)')
     parser.add_argument('--advanced', nargs='*', type=int, default=[], help='Select advanced commands by index (e.g., 1 2 3)')
-    parser.add_argument('--output', required=True, help='Output file path for the batch script')
+    parser.add_argument('--name', required=True, help='Name for the folder and batch file')
 
     parser.epilog = list_commands()
 
@@ -67,7 +82,7 @@ def main():
     selected_basic = [basic_commands[i - 1] for i in args.basic]
     selected_advanced = [advanced_commands[i - 1] for i in args.advanced]
 
-    generate_batch_file(selected_basic, selected_advanced, args.output)
+    generate_batch_file(selected_basic, selected_advanced, args.name)
 
 if __name__ == "__main__":
     main()
