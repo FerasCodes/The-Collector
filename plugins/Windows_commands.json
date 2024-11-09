@@ -560,8 +560,17 @@
 	  "category": "Advance",
     "Command": [
       "echo Collecting MFT information",
-      "fsutil usn readjournal C: > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_mft.txt\""
-    ]
+      "set SCRIPT_DIR=%~dp0",
+      "set TOOL_PATH=%SCRIPT_DIR%modules",
+      "if exist \"%TOOL_PATH%\\MFTEcmd.exe\" (",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$MFT --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_mft\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$MFTMirr --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_mftmirr\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$LogFile --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_logfile\"",
+      ") else (",
+      "   echo MFTEcmd.exe not found in %TOOL_PATH%",
+      ")",
+      "echo MFT information collected."
+	]
   },
   {
     "Command_Name": "AD Sync",
