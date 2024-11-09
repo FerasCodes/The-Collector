@@ -62,7 +62,7 @@ Example:
 ```json
 {
   "Command_Name": "List directory contents",
-  "Category": "Optional",
+  "Category": "basic",
   "Command": [
     "dir"
     ]
