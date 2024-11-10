@@ -343,7 +343,7 @@
 	  "category": "Advance",
     "Command": [
       "echo Collecting pipe information",
-      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem -Path '\\\\.\\pipe\\' | Sort-Object Length | Select-Object FullName, Length, IsReadOnly, Exists, CreationTime, LastAccessTime | Export-Csv -Encoding UTF8 -NoTypeInformation -Path '$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Pipe_Info.csv'\""
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem -Path '\\\\.\\pipe\\' | Sort-Object Length | Select-Object FullName, Length, IsReadOnly, Exists, CreationTime, LastAccessTime | Export-Csv -Encoding UTF8 -NoTypeInformation -Path \\\"$($env:USERPROFILE)\\Desktop\\$($env:COMPUTERNAME)\\$($env:COMPUTERNAME)_Pipe_Info.csv\\\"\""
     ]
   },
   {
