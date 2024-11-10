@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import simpledialog, filedialog
+from tkinter import filedialog
 import json
 import os
 import shutil
@@ -130,7 +130,7 @@ class CommandGenerator:
 
         tk.Button(self.buttons_frame, text="Select All", command=self.select_all, font=("Segoe UI", 10)).pack(side=tk.LEFT, padx=5, pady=5)
         tk.Button(self.buttons_frame, text="Select None", command=self.select_none, font=("Segoe UI", 10)).pack(side=tk.LEFT, padx=5, pady=5)
-        tk.Button(self.buttons_frame, text="Generate Batch", command=self.generate_batch, font=("Segoe UI", 10)).pack(side=tk.RIGHT, padx=5, pady=5)
+        tk.Button(self.buttons_frame, text="Generate Script", command=self.generate_script, font=("Segoe UI", 10)).pack(side=tk.RIGHT, padx=5, pady=5)
 
         self.footer_label = tk.Label(self.root, text="Created by Feras Faqeeh", font=("Segoe UI", 9))
         self.footer_label.grid(row=2, column=0, columnspan=2, pady=10)
@@ -143,8 +143,12 @@ class CommandGenerator:
         for var in self.basic_vars + self.advanced_vars:
             var.set(False)
 
-    def generate_batch(self):
-        selected_commands = ["@echo off"]
+    def generate_script(self):
+        os_choice = self.selected_os.get()
+        extension = ".bat" if os_choice == "Windows" else ".sh"
+        header = "@echo off" if os_choice == "Windows" else "#!/bin/bash"
+
+        selected_commands = [header]
 
         for cmd in self.must_commands:
             selected_commands.extend(convert_to_batch(cmd["Command"]))
@@ -160,25 +164,29 @@ class CommandGenerator:
         for cmd in self.hashing_command:
             selected_commands.extend(convert_to_batch(cmd["Command"]))
 
-        selected_commands.append("@pause")
+        if os_choice == "Windows":
+            selected_commands.append("@pause")
 
         folder_path = filedialog.asksaveasfilename(
-            title="Save Batch File",
-            defaultextension="",
-            filetypes=[("Folder", "")],
+            title="Save Script File",
+            defaultextension=extension,
+            filetypes=[("Batch File", "*.bat")] if os_choice == "Windows" else [("Shell Script", "*.sh")],
             initialfile="NewFolder"
         )
-        
+
         if folder_path:
             folder_dir = os.path.splitext(folder_path)[0]
             os.makedirs(folder_dir, exist_ok=True)
-            batch_file_path = os.path.join(folder_dir, f"{os.path.basename(folder_dir)}.bat")
-            with open(batch_file_path, "w") as file:
+            script_file_path = os.path.join(folder_dir, f"{os.path.basename(folder_dir)}{extension}")
+            with open(script_file_path, "w") as file:
                 file.write("\n".join(selected_commands))
-            
+
+            if os_choice != "Windows":
+                os.chmod(script_file_path, 0o755)  # Make the script executable
+
             copy_modules_to_folder(folder_dir)
 
-            self.show_custom_message("Success", f"Batch script generated in {folder_dir}")
+            self.show_custom_message("Success", f"Script generated in {folder_dir}")
 
     def show_custom_message(self, title, message):
         custom_dialog = tk.Toplevel(self.root)
