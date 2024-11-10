@@ -473,15 +473,6 @@
     ]
   },
   {
-    "Command_Name": "RDP sessions",
-    "terminal_type": "CMD",
-	  "category": "Advance",
-    "Command": [
-      "echo Collecting RDP sessions information",
-      "C:\\Windows\\System32\\qwinsta.exe /counter > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_RDP_sessions.txt"
-    ]
-  },
-  {
     "Command_Name": "Windows Firewall",
     "terminal_type": "powershell",
     "category": "Advance",
