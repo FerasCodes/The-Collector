@@ -442,7 +442,7 @@
 	  "category": "Advance",
     "Command": [
       "echo Collecting",
-      "C:\\Windows\\System32\\nbtstat.exe -s > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_netbios_sessions.txt"
+      "C:\\Windows\\System32\\nbtstat.exe -s > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_netbios_sessions.txt"
     ]
   },
   {
@@ -451,7 +451,7 @@
 	  "category": "Advance",
     "Command": [
       "echo Collecting",
-      "C:\\Windows\\System32\\net.exe File > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_net_File.txt"
+      "C:\\Windows\\System32\\net.exe File > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%__net_File.txt"
     ]
   },
   {
@@ -460,7 +460,16 @@
 	  "category": "Advance",
     "Command": [
       "echo Collecting trusted domain information",
-      "C:\\Windows\\System32\\nltest.exe /trusted_domains > $env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Trusted_Domain.txt"
+      "C:\\Windows\\System32\\nltest.exe /trusted_domains > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_Trusted_Domain.txt\""
+    ]
+  },
+  {
+    "Command_Name": "RDP sessions",
+    "terminal_type": "CMD",
+	  "category": "Advance",
+    "Command": [
+      "echo Collecting RDP sessions information",
+      "C:\\Windows\\System32\\qwinsta.exe /counter > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_RDP_sessions.txt\""
     ]
   },
   {
