@@ -1,0 +1,60 @@
+[
+  {
+    "Command_Name": "List IPTables rules",
+    "terminal_type": "COMMAND",
+    "category": "Must",
+    "Command": [
+      "/sbin/iptables -L -n -v"
+    ]
+  },
+  {
+    "Command_Name": "Linux at jobs",
+    "terminal_type": "FILE",
+    "category": "Basic",
+    "Command": [
+      "cat /var/spool/at/*"
+    ]
+  },
+  {
+    "Command_Name": "Linux audit log files",
+    "terminal_type": "FILE",
+    "category": "Basic",
+    "Command": [
+      "cat /var/log/audit/*"
+    ]
+  },
+  {
+    "Command_Name": "Crontab files",
+    "terminal_type": "FILE",
+    "category": "Basic",
+    "Command": [
+      "cat /etc/crontab",
+      "cat /etc/cron.d/*",
+      "cat /var/spool/cron/**"
+    ]
+  },
+  {
+    "Command_Name": "Linux hostname file",
+    "terminal_type": "FILE",
+    "category": "Basic",
+    "Command": [
+      "cat /etc/hostname"
+    ]
+  },
+  {
+    "Command_Name": "Linux passwd file",
+    "terminal_type": "FILE",
+    "category": "Basic",
+    "Command": [
+      "cat /etc/passwd"
+    ]
+  },
+  {
+    "Command_Name": "Users directories in /home",
+    "terminal_type": "PATH",
+    "category": "Basic",
+    "Command": [
+      "ls /home/*"
+    ]
+  }
+]
