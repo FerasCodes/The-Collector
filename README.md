@@ -67,7 +67,8 @@ Example:
 ## File Structure
 
 - `the_collector.py`: Main application script.
-- `Windows_commands.json`: JSON file containing command definitions.
+- `Windows_commands.json`: JSON file containing Windoes command definitions.
+- `Linux_commands.json`: JSON file containing Linux command definitions.
 
 
 
