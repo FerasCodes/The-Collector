@@ -22,11 +22,7 @@ The application requires Python 3.x.
 
 1. **Run the Application**:
    
-  a. For the GUI 
-   ```bash
-   python The Collector GUI.py
-```
-  b. For the terminal 
+   From the terminal 
   ```bash
   python The-Collector.py
 
@@ -73,8 +69,6 @@ Example:
 - `the_collector.py`: Main application script.
 - `Windows_commands.json`: JSON file containing command definitions.
 
-## GUI 
-![image](https://github.com/user-attachments/assets/8affe9b1-bdb8-4c5a-80db-f2799774258d)
 
 
 ## Contributing
