@@ -1,4 +1,4 @@
-# The Collector 2.0
+# The Collector 
 
 **Script Studio** — build and run Windows (XP–11) and Linux (RHEL / Ubuntu) evidence-collection scripts from a dark IDE-style GUI or CLI. Built by Feras Faqeeh.
 
