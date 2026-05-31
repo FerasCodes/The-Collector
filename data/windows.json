@@ -1,0 +1,4022 @@
+[
+  {
+    "id": "win-creating-a-directory-0",
+    "name": "Creating a directory",
+    "description": "Collect creating a directory artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo creating \"%USERPROFILE%\\Desktop\\%computername%\"",
+      "mkdir %USERPROFILE%\\Desktop\\%computername%",
+      "cd %USERPROFILE%\\Desktop\\%computername%",
+      "echo Done."
+    ],
+    "syntax": "mkdir %USERPROFILE%\\Desktop\\%computername%",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": true,
+    "favorite": false
+  },
+  {
+    "id": "win-network-information-1",
+    "name": "Network information",
+    "description": "Collect network information artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting Network information",
+      "ipconfig /all > %USERPROFILE%\\Desktop\\%computername%\\\"%computername%\"_ipconfig.txt",
+      "netsh interface show interface > %USERPROFILE%\\Desktop\\%computername%\\\"%computername%\"_portstatus.txt",
+      "netstat -an > %USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_network_connections.txt",
+      "netsh interface ipv4 show interfaces > %USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_NetworkInterfaces.txt"
+    ],
+    "syntax": "ipconfig /all > %USERPROFILE%\\Desktop\\%computername%\\\"%computername%\"_ipconfig.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-local-users-and-password-policy-2",
+    "name": "Local users and password policy",
+    "description": "Collect local users and password policy artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting user information and password policy",
+      "wmic useraccount list full > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_useraccounts.txt\"",
+      "net users > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_netuser.txt\"",
+      "net accounts > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_PWDPolicy.txt\"",
+      "for /f \"tokens=1-3 skip=4\" %%a in ('type \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_netuser.txt\"') do (",
+      "  net user %%a > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_%%a.txt\" 2>&1",
+      "  net user %%b > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_%%b.txt\" 2>&1",
+      "  net user %%c > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_%%c.txt\" 2>&1",
+      ")",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-LocalGroupMember -Group 'Administrators' | Select-Object Name, SID, PrincipalSource, Description | Export-Csv -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_Admin_List.csv' -NoTypeInformation\"",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-LocalGroup | Select-Object * | Export-Csv -Encoding UTF8 -NoTypeInformation -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_Local_Groups.csv'\"",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"New-Item -Path C:\\\\$(hostname) -ItemType Directory -Force; Get-WmiObject -Class Win32_UserAccount | Select-Object AccountType, Caption, Domain, Name, FullName, InstallDate, SID, Status | Export-Csv -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_User_List.csv' -NoTypeInformation\"",
+      "echo Done."
+    ],
+    "syntax": "wmic useraccount list full > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_useraccounts.txt\"",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-audit-policies-3",
+    "name": "Audit policies",
+    "description": "Collect audit policies artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Audit Policy",
+      "auditpol /get /category:* > %USERPROFILE%\\Desktop\\%computername%\\%computername%_audit.txt"
+    ],
+    "syntax": "auditpol /get /category:* > %USERPROFILE%\\Desktop\\%computername%\\%computername%_audit.txt",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-windows-features-4",
+    "name": "Windows features",
+    "description": "Collect windows features artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting windows features",
+      "dism /online /get-features > %USERPROFILE%\\Desktop\\%computername%\\%computername%_features.txt"
+    ],
+    "syntax": "dism /online /get-features > %USERPROFILE%\\Desktop\\%computername%\\%computername%_features.txt",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-system-info-5",
+    "name": "System info",
+    "description": "Collect system info artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting system information",
+      "systeminfo > %USERPROFILE%\\Desktop\\%computername%\\%computername%_sysinfo.txt"
+    ],
+    "syntax": "systeminfo > %USERPROFILE%\\Desktop\\%computername%\\%computername%_sysinfo.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-schedule-tasks-and-running-tasks-6",
+    "name": "Schedule Tasks and running tasks",
+    "description": "Collect schedule tasks and running tasks artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Service",
+    "lines": [
+      "echo Collecting schedule Tasks",
+      "schtasks /query /fo LIST /v > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ScheduledTasks.txt"
+    ],
+    "syntax": "schtasks /query /fo LIST /v > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ScheduledTasks.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-installed-drivers-7",
+    "name": "Installed Drivers",
+    "description": "Collect installed drivers artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Installed Drivers",
+      "driverquery > %USERPROFILE%\\Desktop\\%computername%\\%computername%_InstalledDrivers.txt"
+    ],
+    "syntax": "driverquery > %USERPROFILE%\\Desktop\\%computername%\\%computername%_InstalledDrivers.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-installed-software-8",
+    "name": "Installed Software",
+    "description": "Collect installed software artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Installed Software",
+      "wmic product get name,version > %USERPROFILE%\\Desktop\\%computername%\\%computername%_proglist.txt"
+    ],
+    "syntax": "wmic product get name,version > %USERPROFILE%\\Desktop\\%computername%\\%computername%_proglist.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "10",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-windows-patches-9",
+    "name": "Windows Patches",
+    "description": "Collect windows patches artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting windows patches information",
+      "wmic qfe list full /format:table > %USERPROFILE%\\Desktop\\%computername%\\%computername%_patch.txt"
+    ],
+    "syntax": "wmic qfe list full /format:table > %USERPROFILE%\\Desktop\\%computername%\\%computername%_patch.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "10",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-services-10",
+    "name": "Services",
+    "description": "Collect services artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Service",
+    "lines": [
+      "echo Collecting windows services",
+      "wmic service list full /format:table > %USERPROFILE%\\Desktop\\%computername%\\%computername%_wmic.txt"
+    ],
+    "syntax": "wmic service list full /format:table > %USERPROFILE%\\Desktop\\%computername%\\%computername%_wmic.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "10",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-windows-events-11",
+    "name": "Windows Events",
+    "description": "Collect windows events artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting windows events",
+      "for %%G in (System Application Security Setup ForwardedEvents) do (",
+      "  wevtutil epl %%G \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_%%G.evtx\"",
+      ")"
+    ],
+    "syntax": "wevtutil epl %%G \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_%%G.evtx\"",
+    "output_type": "evtx",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-registry-keys-12",
+    "name": "Registry Keys",
+    "description": "Collect registry keys artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting reg info of \"%computername%\"",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\ /v NoDriveTypeAutoRun > %USERPROFILE%\\Desktop\\%computername%\\%computername%_AutoPlay.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\cdrom /v Start > %USERPROFILE%\\Desktop\\%computername%\\%computername%_CD.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\USBSTOR /v Start > %USERPROFILE%\\Desktop\\%computername%\\%computername%_USB.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters /v * > %USERPROFILE%\\Desktop\\%computername%\\%computername%_NTPReg.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WINEVT\\Channels\\Microsoft-Windows-DriverFrameworks-UserMode/Operational /v Enabled > %USERPROFILE%\\Desktop\\%computername%\\%computername%_USBTrace.txt",
+      "(reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v AutoAdminLogon & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v AutoLogonSID & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DefaultUserName & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DisableLockWorkstation & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v LastUsedUsername & reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v Shell) > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_AutoLogon.txt\"",
+      "reg query \"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\SSL 2.0\\Server\" /v Enabled > %USERPROFILE%\\Desktop\\%computername%\\%computername%_SSL2.txt",
+      "reg query \"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\SSL 3.0\\Server\" /v Enabled > %USERPROFILE%\\Desktop\\%computername%\\%computername%_SSL3.txt",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$directory='$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME'; New-Item -Path $directory -ItemType Directory -Force; Get-PnpDevice | ConvertTo-Json | Out-File -Encoding UTF8 -FilePath '$directory\\$env:COMPUTERNAME`_pnpDevice_Info.json'\""
+    ],
+    "syntax": "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\ /v NoDriveTypeAutoRun > %USERPROFILE%\\Desktop\\%computername%\\%computername%_AutoPlay.txt",
+    "output_type": "json",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-group-and-local-policy-13",
+    "name": "Group and local policy",
+    "description": "Collect group and local policy artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Group Policy",
+      "gpresult /V >\"C:\\Users\\Public\\Documents\\%computername%_gpresult.txt\"",
+      "move \"C:\\Users\\Public\\Documents\\%computername%_gpresult.txt\" %USERPROFILE%\\Desktop\\%computername%",
+      "echo Exporting local security policy",
+      "secedit /export /cfg %USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_LocalSecurityPolicy.txt"
+    ],
+    "syntax": "gpresult /V >\"C:\\Users\\Public\\Documents\\%computername%_gpresult.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-mcafee-14",
+    "name": "McAfee",
+    "description": "Collect mcafee artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee",
+      "echo Collecting McAfee DAT Version of \"%computername%\"",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\McAfee\\AVEngine /v AVDatVersion > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeVSEDATVersion.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\McAfee\\AVSolution\\DS\\DS /v dwContentMajorVersion > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeENSDATVersion.txt",
+      "echo Done.",
+      "echo Collecting McAfee DAT Date of \"%computername%\"",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\McAfee\\AVEngine /v AVDatDate > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeVSEDATDate.txt",
+      "reg query HKEY_LOCAL_MACHINE\\SOFTWARE\\McAfee\\AVSolution\\DS\\DS /v szContentCreationDate > %USERPROFILE%\\Desktop\\%computername%\\McAfee\\%computername%_McAfeeENSDATDate.txt",
+      "echo Done.",
+      "echo Collecting McAfee Logs of \"%computername%\"",
+      "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsVSE",
+      "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsENS",
+      "copy C:\\ProgramData\\McAfee\\DesktopProtection\\* %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsVSE\\",
+      "copy \"C:\\ProgramData\\McAfee\\Endpoint Security\\Logs\\*\" %USERPROFILE%\\Desktop\\%computername%\\McAfee\\McAffeLogsENS\\"
+    ],
+    "syntax": "mkdir %USERPROFILE%\\Desktop\\%computername%\\McAfee",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-symantec-15",
+    "name": "Symantec",
+    "description": "Collect symantec artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting Symantec Info of \"%computername%\"",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\"",
+      "echo Collecting Symantec Endpoint Protection Version of %computername%",
+      "reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Symantec\\Symantec Endpoint Protection\\CurrentVersion\" /v ProductVersion > \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\%computername%_SymantecVersion.txt\"",
+      "echo Done.",
+      "echo Collecting Symantec Virus Definition Version of \"%computername%\"",
+      "reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Symantec\\Symantec Endpoint Protection\\AV\\PatternManager\" /v PatternFile > \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\%computername%_SymantecVirusDefVersion.txt\"",
+      "echo Done.",
+      "echo Collecting Symantec Virus Definition Date of \"%computername%\"",
+      "reg query \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Symantec\\Symantec Endpoint Protection\\AV\\PatternManager\" /v PatternFileDate > \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\%computername%_SymantecVirusDefDate.txt\"",
+      "echo Done.",
+      "echo Collecting Symantec Logs of \"%computername%\"",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\SymantecLogs\"",
+      "copy \"C:\\ProgramData\\Symantec\\Symantec Endpoint Protection\\Logs\\*\" \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\\SymantecLogs\\\"",
+      "echo Done."
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Symantec\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-time-16",
+    "name": "Time",
+    "description": "Collect time artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting time configuration",
+      "w32tm /query /status > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntp.txt",
+      "w32tm /query /peers > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntppeers.txt",
+      "w32tm /monitor > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntpmonitor.txt"
+    ],
+    "syntax": "w32tm /query /status > %USERPROFILE%\\Desktop\\%computername%\\%computername%_ntp.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-software-hive-17",
+    "name": "Software hive",
+    "description": "Collect software hive artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting software hive",
+      "reg.exe save HKLM\\SOFTWARE \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SOFTWARE\""
+    ],
+    "syntax": "reg.exe save HKLM\\SOFTWARE \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SOFTWARE\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-system-hive-18",
+    "name": "System hive",
+    "description": "Collect system hive artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting System hive",
+      "reg.exe save HKLM\\SYSTEM \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SYSTEM\""
+    ],
+    "syntax": "reg.exe save HKLM\\SYSTEM \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SYSTEM\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-sam-hive-19",
+    "name": "SAM hive",
+    "description": "Collect sam hive artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting SAM hive",
+      "reg.exe save HKLM\\SAM \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SAM\""
+    ],
+    "syntax": "reg.exe save HKLM\\SAM \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SAM\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-security-hive-20",
+    "name": "Security hive",
+    "description": "Collect security hive artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting Security hive",
+      "reg.exe save HKLM\\SECURITY \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SECURITY\""
+    ],
+    "syntax": "reg.exe save HKLM\\SECURITY \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_SECURITY\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-ntuser-21",
+    "name": "NTUser",
+    "description": "Collect ntuser artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting NTUser hive",
+      "reg.exe save \"HKCU\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_ntuser.dat\""
+    ],
+    "syntax": "reg.exe save \"HKCU\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_ntuser.dat\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-shimcache-and-amcache-22",
+    "name": "Shimcache and Amcache",
+    "description": "Collect shimcache and amcache artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\AppCompatCache\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_shimcache.dat\"",
+      "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\bam\\UserSettings\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_amcache.dat\""
+    ],
+    "syntax": "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\AppCompatCache\" \"%USERPROFILE%\\Desktop\\%computername%\\%COMPUTERNAME%_shimcache.dat\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-hardware-hive-23",
+    "name": "Hardware hive",
+    "description": "Collect hardware hive artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting Hardware hive",
+      "reg.exe save HKLM\\HARDWARE \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_HARDWARE\""
+    ],
+    "syntax": "reg.exe save HKLM\\HARDWARE \"%USERPROFILE%\\Desktop\\%computername%\\%computerName%_HKLM_HARDWARE\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-active-drives-24",
+    "name": "Active Drives",
+    "description": "Collect active drives artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting active drivers information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe Get-PSDrive >%USERPROFILE%\\Desktop\\%computername%\\%computername%_activeDrivers.txt"
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe Get-PSDrive >%USERPROFILE%\\Desktop\\%computername%\\%computername%_activeDrivers.txt",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-arp-information-25",
+    "name": "ARP information",
+    "description": "Collect arp information artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting ARP caches information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe Get-NetNeighbor >%USERPROFILE%\\Desktop\\%computername%\\%computername%_ARPcache.txt",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-NetNeighbor | Where-Object {$_.AddressFamily -eq 'IPv4'} | Select-Object InterfaceAlias, IPAddress, LinkLayerAddress, State | Export-Csv -Encoding UTF8 -NoTypeInformation -Path '%USERPROFILE%\\Desktop\\%computername%\\%computername%_ARP_Table.csv'\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe Get-NetNeighbor >%USERPROFILE%\\Desktop\\%computername%\\%computername%_ARPcache.txt",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-bitlocker-information-26",
+    "name": "Bitlocker information",
+    "description": "Collect bitlocker information artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Bitlocker information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-BitLockerVolume -MountPoint %sourceDriveLetter% | Select-Object -ExpandProperty KeyProtector | Format-List | Out-File -FilePath %USERPROFILE%\\Desktop\\%computername%\\%computername%_Bitlocker_key.txt\"",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-BitLockerVolume -Mountpoint %sourceDriveLetter% | Format-List | Out-File -FilePath %USERPROFILE%\\Desktop\\%computername%\\%computername%_Bitlocker_status.txt\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-BitLockerVolume -MountPoint %sourceDriveLetter% | Select-Object -ExpandProperty KeyProtector | Format-List | Out-File -FilePath ",
+    "output_type": "text",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-windows-defender-exclusions-27",
+    "name": "Windows defender exclusions",
+    "description": "Collect windows defender exclusions artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Windows defender exclusions",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem 'HKLM:\\SOFTWARE\\Microsoft\\Windows Defender\\Exclusions'\" > %USERPROFILE%\\Desktop\\%computername%\\%computername%_Defender_exclusions.txt"
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem 'HKLM:\\SOFTWARE\\Microsoft\\Windows Defender\\Exclusions'\" > %USERPROFILE%\\Desktop\\%computername%\\%computername%_Defender",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-dll-list-28",
+    "name": "DLL list",
+    "description": "Collect dll list artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "echo Collecting DLL for each process",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-Process | Format-List ProcessName, @{l='Modules';e={($_.Modules | Out-String)}} | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_DLL_list.txt')) }\""
+    ],
+    "syntax": "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $f",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-dns-information-29",
+    "name": "DNS information",
+    "description": "Collect dns information artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting DNS information",
+      "powershell.exe -Command \"Get-DnsClientCache | Select-Object Entry, Name, Status, Type, TimeToLive, Data | Export-Csv -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_DNS_cache.CSV\\\"\"",
+      "powershell.exe -Command \"Get-DnsClientCache | Select Entry, Name, Type, Status, Section, TimeToLive, DataLength, Data | Export-Csv -Encoding UTF8 -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_DNS_Client_cache.CSV\\\"\"",
+      "powershell.exe -Command \"Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter 'IPEnabled=TRUE' | Select-Object Index, ServiceName, Description, MacAddress, @{Name='IpAddress';Expression={$_.IpAddress -join '; '}}, @{Name='DefaultIPGateway';Expression={$_.DefaultIPGateway -join '; '}}, DnsHostname, DnsDomain, DhcpEnabled, DhcpServer, DHCPLeaseObtained | Sort-Object Index | Export-Csv -Encoding UTF8 -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_Network_Configuration.csv\\\"\""
+    ],
+    "syntax": "powershell.exe -Command \"Get-DnsClientCache | Select-Object Entry, Name, Status, Type, TimeToLive, Data | Export-Csv -NoTypeInformation -Path \\\"$env:USERPROFILE\\Desktop\\$env:COMPUTERNAME\\_DNS_cache.CS",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-docker-information-30",
+    "name": "Docker information",
+    "description": "Collect docker information artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Docker information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$filePath = '$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_docker_container_info.txt'; $dockerOutput = (docker version | Out-String).TrimEnd() + [System.Environment]::NewLine + [System.Environment]::NewLine + (docker ps --all --format 'ID: {{.ID}} | Name: {{.Names}} | Image: {{.Image}} | Size: {{.Size}} | Status: {{.Status}} | Command: {{.Command}}' | Out-String).TrimEnd(); Set-Content -Path $filePath -Value $dockerOutput -Encoding UTF8;\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$filePath = '$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_docker_container_info.txt'; $dockerOutput = (docker versio",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pipe-information-31",
+    "name": "PIPE information",
+    "description": "Collect pipe information artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting pipe information",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem -Path '\\\\.\\pipe\\' | Sort-Object Length | Select-Object FullName, Length, IsReadOnly, Exists, CreationTime, LastAccessTime | Export-Csv -Encoding UTF8 -NoTypeInformation -Path \\\"$($env:USERPROFILE)\\Desktop\\$($env:COMPUTERNAME)\\$($env:COMPUTERNAME)_Pipe_Info.csv\\\"\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-ChildItem -Path '\\\\.\\pipe\\' | Sort-Object Length | Select-Object FullName, Length, IsReadOnly, Exists, CreationTime, LastAccessT",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-routing-table-32",
+    "name": "Routing table",
+    "description": "Collect routing table artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting routing table",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetRoute | Select-Object DestinationPrefix, NextHop, InterfaceAlias, RouteMetric, Protocol, InterfaceIndex, AddressFamily | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Routing_Table.csv')) }\""
+    ],
+    "syntax": "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $f",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-network-share-33",
+    "name": "Network share",
+    "description": "Collect network share artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting network share information",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-SMBShare | Select-Object Name, Volume, Path, Description | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Share.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-WmiObject -Class Win32_Share | Select-Object Name, Path, Description | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Shares.csv')) }\""
+    ],
+    "syntax": "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $f",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-network-adapter-and-network-configuration-information-34",
+    "name": "Network adapter and network configuration information",
+    "description": "Collect network adapter and network configuration information artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting Network adapter and network configuration information ",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetAdapter | Select-Object Name, Status, MacAddress, PhysicalMediaType, DriverName, DriverInformation, DriverVersion, DriverDescription, SystemName, PnPDeviceID | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_Adapters.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-NetIPConfiguration | Select-Object InterfaceAlias, InterfaceIndex, InterfaceDescription, @{Name='NetProfile';Expression={$_.NetProfile.Name}}, @{Name='IPv4Address';Expression={$_.IPv4Address -join ','}}, @{Name='IPv4DefaultGateway';Expression={$_.IPv4DefaultGateway -join ','}}, @{Name='DNSServer';Expression={$_.DNSServer -join ','}} | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Network_IP_Configuration.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-SMBMapping | Select LocalPath, RemotePath, Status, RequireIntegrity, RequirePrivacy, UseWriteThrough | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_SMB_Mapping.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-SMBOpenFile | Select FileId, SessionId, Path, ShareRelativePath, ClientComputerName, ClientUsername | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_SMB_Open_Files.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-SMBSession | Select SessionId, ClientComputerName, ClientUserName, NumOpens | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_SMB_Session.csv')) }\""
+    ],
+    "syntax": "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $f",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-active-network-connections-35",
+    "name": "Active network connections",
+    "description": "Collect active network connections artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting active network connections",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State, AppliedSetting, OwningProcess | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Active_Network_Connections.csv')) }\""
+    ],
+    "syntax": "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folde",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-network-statistics-36",
+    "name": "Network statistics",
+    "description": "Collect network statistics artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting network statistics",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath | Out-Null }; Get-NetUDPEndpoint | Select-Object LocalAddress, LocalPort, OwningProcess | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_UDP_Endpoints.csv')) }\"",
+      "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-NetAdapterStatistics | Select-Object Name, ReceivedUnicastPackets, ReceivedBroadcastPackets, ReceivedDiscardedPackets, OutboundUnicastPackets, OutboundBroadcastPackets, OutboundDiscardedPackets | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Adapter_Statistics.csv')) }\""
+    ],
+    "syntax": "powershell.exe -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $f",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-cmdlist-37",
+    "name": "CMDlist",
+    "description": "Collect cmdlist artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "echo Collecting cmdlist",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-WmiObject -Class Win32_Process | Select-Object Name, ProcessId, CommandLine | Sort-Object Name | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\' + $env:COMPUTERNAME + '_cmdline.csv'))\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-WmiObject -Class Win32_Process | Select-Object Name, ProcessId, CommandLine | Sort-Object Name | Export-Csv -Encoding UTF8 -NoTy",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-recyclebin-38",
+    "name": "RecycleBin",
+    "description": "Collect recyclebin artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Service",
+    "lines": [
+      "echo Collecting recycleBin",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$shell = New-Object -ComObject Shell.Application; $recycleBin = $Shell.Namespace(0xA); $recycled = @(); $recycleBin.Items() | ForEach-Object { $originalPath = $_.ExtendedProperty('{9B174B33-40FF-11D2-A27E-00C04FC30871} 2'); $originalPath = (Join-Path -Path $originalPath -ChildPath $_.Name); $recycledPath = $_.Path; if (Test-Path $recycledPath -PathType Container) { $fileType = 'Directory' } else { $fileType = 'File' }; $sha1 = (Get-FileHash -Algorithm SHA1 -Path $recycledPath -ErrorAction SilentlyContinue).Hash; $removalDate = $_.ExtendedProperty('{9B174B33-40FF-11D2-A27E-00C04FC30871} 3'); $recycleSid = $recycledPath.Split('\\')[2]; $objSID = New-Object System.Security.Principal.SecurityIdentifier($recycleSid); $userName = $objSID.Translate([System.Security.Principal.NTAccount]).Value; $properties = [ordered]@{ 'Removal Date' = $removalDate; 'Username' = $userName; 'Recycle Bin Path' = $recycledPath; 'Original Path' = $originalPath; 'File Name' = $_.Name; 'File Type' = $fileType; 'SHA1' = $sha1 }; $recycled += New-Object psobject -Property $properties }; [System.Runtime.InteropServices.Marshal]::ReleaseComObject($shell) | Out-Null; [System.GC]::Collect(); [System.GC]::WaitForPendingFinalizers(); $shell = $null; $csvPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\' + $env:COMPUTERNAME + '_RecycleBin.csv'); $recycled | Export-Csv -Encoding UTF8 -NoTypeInformation -Path $csvPath\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$shell = New-Object -ComObject Shell.Application; $recycleBin = $Shell.Namespace(0xA); $recycled = @(); $recycleBin.Items() | ForEac",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-startup-commands-39",
+    "name": "Startup commands",
+    "description": "Collect startup commands artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting startup commands",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-CimInstance -Class Win32_StartupCommand | Format-Table -Property Name, Command, User, Location -Wrap | Out-File -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\' + $env:COMPUTERNAME + '_startup_commands.txt'))\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"Get-CimInstance -Class Win32_StartupCommand | Format-Table -Property Name, Command, User, Location -Wrap | Out-File -FilePath (Join-",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-tcp-connection-info-40",
+    "name": "TCP connection info",
+    "description": "Collect tcp connection info artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting TCP connections info",
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$connections = @(); if($PSVersionTable.PSVersion.Major -lt 5){ Get-NetTCPConnection | ForEach-Object { $connections += New-Object psobject -Property ([ordered]@{ 'State'=$_.State; 'DNSCache'=(Get-DnsClientCache -Data $_.RemoteAddress -ea 0).Entry; 'RemoteAddress'=$_.RemoteAddress; 'RemotePort'=$_.RemotePort }) } } else{ Get-NetTCPConnection | ForEach-Object { try { $process = Get-Process -Id $_.OwningProcess -ErrorAction Stop; $connections += New-Object psobject -Property ([ordered]@{ 'State'=$_.State; 'DNSCache'=(Get-DnsClientCache -Data $_.RemoteAddress -ea 0).Entry; 'UserName'=$process.UserName; 'Process Name'=$process.Name; 'Process Path'=$process.Path; 'OwningProcess'=$_.OwningProcess; 'LocalAddress'=$_.LocalAddress; 'LocalPort'=$_.RemotePort; 'RemoteAddress'=$_.RemoteAddress; 'RemotePort'=$_.LocalPort }) } catch { Write-Warning \\\"Process with ID $($_.OwningProcess) not found.\\\" } } }; $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME); if (-Not (Test-Path -Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath }; $outputPath = Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_TCPConnections.csv'); $connections | Export-Csv -NoTypeInformation -Path $outputPath\""
+    ],
+    "syntax": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -Command \"$connections = @(); if($PSVersionTable.PSVersion.Major -lt 5){ Get-NetTCPConnection | ForEach-Object { $connections += New-Object ps",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-netbios-sessions-41",
+    "name": "NetBios sessions",
+    "description": "Collect netbios sessions artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting",
+      "C:\\Windows\\System32\\nbtstat.exe -s > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_netbios_sessions.txt"
+    ],
+    "syntax": "C:\\Windows\\System32\\nbtstat.exe -s > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_netbios_sessions.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-net-file-42",
+    "name": "Net File",
+    "description": "Collect net file artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting",
+      "C:\\Windows\\System32\\net.exe File > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%__net_File.txt"
+    ],
+    "syntax": "C:\\Windows\\System32\\net.exe File > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%__net_File.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trusted-domain-43",
+    "name": "Trusted Domain",
+    "description": "Collect trusted domain artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting trusted domain information",
+      "C:\\Windows\\System32\\nltest.exe /trusted_domains > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_Trusted_Domain.txt\""
+    ],
+    "syntax": "C:\\Windows\\System32\\nltest.exe /trusted_domains > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_Trusted_Domain.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-rdp-sessions-44",
+    "name": "RDP sessions",
+    "description": "Collect rdp sessions artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting RDP sessions information",
+      "C:\\Windows\\System32\\qwinsta.exe /counter > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_RDP_sessions.txt\""
+    ],
+    "syntax": "C:\\Windows\\System32\\qwinsta.exe /counter > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_RDP_sessions.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-windows-firewall-45",
+    "name": "Windows Firewall",
+    "description": "Collect windows firewall artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo Collecting Firewall information",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall show currentprofile | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_CurrentProfile.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall firewall show rule name=all | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_AllRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall firewall show rule name=all dir=in | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_InboundRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall firewall show rule name=all dir=out | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_OutboundRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall show global | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_Settings.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall consec show rule name=all | Out-File -FilePath (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_ConsecRules.txt')) }\"",
+      "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); Get-NetFirewallRule | Select-Object DisplayName, Description, Enabled, Direction, Action, Profile, Platform, Group, InterfaceType | Export-Csv -Encoding UTF8 -NoTypeInformation -Path (Join-Path -Path $folderPath -ChildPath ($env:COMPUTERNAME + '_Firewall_Rules.csv')) }\""
+    ],
+    "syntax": "powershell -Command \"& { $folderPath = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop/' + $env:COMPUTERNAME); netsh advfirewall show currentprofile | Out-File -FilePath (Join-Path -Path $folder",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-prefetch-files-46",
+    "name": "Prefetch files",
+    "description": "Collect prefetch files artifacts and write output to the case folder.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "echo Collecting prefetch",
+      "powershell -Command \"& { $dest = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\PrefetchFiles'); if (-Not (Test-Path -Path $dest)) { New-Item -ItemType Directory -Path $dest }; xcopy 'C:\\Windows\\Prefetch\\*' $dest /i /y }\"",
+      "powershell -Command \"& { $output = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\Prefetch_Files.txt'); dir $dest > $output }\""
+    ],
+    "syntax": "powershell -Command \"& { $dest = Join-Path -Path $env:USERPROFILE -ChildPath ('Desktop\\' + $env:COMPUTERNAME + '\\PrefetchFiles'); if (-Not (Test-Path -Path $dest)) { New-Item -ItemType Directory -Path",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-recent-document-47",
+    "name": "Recent Document",
+    "description": "Collect recent document artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting recent files information",
+      "xcopy \"%APPDATA%\\Microsoft\\Windows\\Recent\" \"$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Recent\" /E /I"
+    ],
+    "syntax": "xcopy \"%APPDATA%\\Microsoft\\Windows\\Recent\" \"$env:USERPROFILE\\Desktop\\$env:computername\\$env:computername_Recent\" /E /I",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-jump-list-48",
+    "name": "Jump list",
+    "description": "Collect jump list artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting jumplist information",
+      "xcopy \"%APPDATA%\\Microsoft\\Windows\\Recent\\AutomaticDestinations\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_JumpLists\" /E /I"
+    ],
+    "syntax": "xcopy \"%APPDATA%\\Microsoft\\Windows\\Recent\\AutomaticDestinations\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_JumpLists\" /E /I",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-shellbags-49",
+    "name": "Shellbags",
+    "description": "Collect shellbags artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "echo Collecting shellbags information",
+      "reg save \"HKCU\\Software\\Microsoft\\Windows\\Shell\\BagMRU\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_shellbags.dat\"",
+      "reg save \"HKCU\\Software\\Microsoft\\Windows\\Shell\\Bags\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_shellbags_bags.dat\""
+    ],
+    "syntax": "reg save \"HKCU\\Software\\Microsoft\\Windows\\Shell\\BagMRU\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_shellbags.dat\"",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-web-browser-history-and-cache-50",
+    "name": "Web Browser History and Cache",
+    "description": "Collect web browser history and cache artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Chrome data",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeHistory\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeCache\\\" /E /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cookies\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeCookies\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Bookmarks\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeBookmarks\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Login Data\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeLoginData\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Preferences\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromePreferences\\\" /I /Y /D",
+      "echo Collecting Edge data",
+      "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeHistory\\\" /I /Y /D",
+      "xcopy \"%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default\\Cache\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_EdgeCache\\\" /E /I /Y /D",
+      "echo Collecting Firefox data",
+      "xcopy \"%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\places.sqlite\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_FirefoxHistory\\\" /I /Y /D",
+      "xcopy \"%APPDATA%\\Mozilla\\Firefox\\Profiles\\*\\cache2\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_FirefoxCache\\\" /E /I /Y /D"
+    ],
+    "syntax": "xcopy \"%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\History\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ChromeHistory\\\" /I /Y /D",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-host-file-51",
+    "name": "Host file",
+    "description": "Collect host file artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting host file information",
+      "xcopy \"%SystemRoot%\\System32\\drivers\\etc\\hosts\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_hosts\\\" /Y /D /F"
+    ],
+    "syntax": "xcopy \"%SystemRoot%\\System32\\drivers\\etc\\hosts\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_hosts\\\" /Y /D /F",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-mft-52",
+    "name": "MFT",
+    "description": "Collect mft artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting MFT information",
+      "set SCRIPT_DIR=%~dp0",
+      "set TOOL_PATH=%SCRIPT_DIR%modules",
+      "if exist \"%TOOL_PATH%\\MFTEcmd.exe\" (",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$MFT --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$MFTMirr --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$LogFile --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$J --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$Boot --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
+      "   \"%TOOL_PATH%\\MFTEcmd.exe\" -f C:\\$SDS --csv \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\"",
+      ") else (",
+      "   echo MFTEcmd.exe not found in %TOOL_PATH%",
+      ")",
+      "echo MFT information collected."
+    ],
+    "syntax": "set SCRIPT_DIR=%~dp0",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-ad-sync-53",
+    "name": "AD Sync",
+    "description": "Collect ad sync artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "echo Collecting Active Directory sync information",
+      "repadmin /syncall /e /d /A > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ADsync.txt\""
+    ],
+    "syntax": "repadmin /syncall /e /d /A > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_ADsync.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wifi-collector-54",
+    "name": "Wifi Collector",
+    "description": "Collect wifi collector artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "echo collecting wifi information",
+      "setlocal enabledelayedexpansion",
+      "set \"outputPath=%USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_wifi_passcode.txt\"",
+      "mkdir \"C:\\%COMPUTERNAME%\" 2>nul",
+      "echo Wi-Fi Profiles and Passwords on %COMPUTERNAME% > \"%outputPath%\"",
+      "for /f \"skip=9 tokens=2 delims=:\" %%i in ('netsh wlan show profiles') do (",
+      "   set \"profile=%%i\"",
+      "   set \"profile=!profile:~1!\"",
+      "   echo Profile: !profile! >> \"%outputPath%\"",
+      "   netsh wlan show profile name=\"!profile!\" key=clear | findstr \"Key Content\" >> \"%outputPath%\"",
+      "   echo. >> \"%outputPath%\"",
+      ")",
+      "endlocal"
+    ],
+    "syntax": "setlocal enabledelayedexpansion",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-task-list-55",
+    "name": "Task list",
+    "description": "Collect task list artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "echo Collecting running process",
+      "tasklist > %USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_Tasklist.txt"
+    ],
+    "syntax": "tasklist > %USERPROFILE%\\Desktop\\%COMPUTERNAME%\\%COMPUTERNAME%_Tasklist.txt",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-hashing-generated-files-56",
+    "name": "Hashing generated files",
+    "description": "Collect hashing generated files artifacts and write output to the case folder.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "echo Zipping the directory...",
+      "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip'\"",
+      "echo Generating hash for the zip file...",
+      "certutil -hashfile \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\" SHA256 > \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt\"",
+      "echo Creating final zip with hash...",
+      "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip', '%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.final.zip'\"",
+      "echo Cleaning up intermediate files...",
+      "del \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\"",
+      "del \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%_hash.txt\"",
+      "timeout /t 5 > nul",
+      "rmdir /S /Q \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%\" || echo Failed to delete folder",
+      "move \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.final.zip\" \"%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip\"",
+      "echo Process completed."
+    ],
+    "syntax": "powershell -command \"Compress-Archive -Path '%USERPROFILE%\\Desktop\\%COMPUTERNAME%' -DestinationPath '%USERPROFILE%\\Desktop\\%COMPUTERNAME%.zip'\"",
+    "output_type": "zip",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [],
+    "parameters": [],
+    "examples": [],
+    "required_step": true,
+    "favorite": false
+  },
+  {
+    "id": "win-eventlog-ps-4624",
+    "name": "Security log \u2014 recent logon events (4624/4625)",
+    "description": "DFIR collection: Security log \u2014 recent logon events (4624/4625)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "echo Collecting recent logon events",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4624,4625} -MaxEvents 500 -ErrorAction SilentlyContinue | Select-Object TimeCreated, Id, LevelDisplayName, Message | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_LogonEvents.txt'\""
+    ],
+    "syntax": "Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4624,4625}",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-persistence-run-keys",
+    "name": "Persistence \u2014 Run / RunOnce registry keys",
+    "description": "DFIR collection: Persistence \u2014 Run / RunOnce registry keys",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Persistence",
+    "lines": [
+      "echo Collecting Run keys",
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RunKeys_HKLM.txt\"",
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\" /s >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RunKeys_HKLM.txt\"",
+      "reg query \"HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RunKeys_HKCU.txt\"",
+      "reg query \"HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\" /s >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RunKeys_HKCU.txt\""
+    ],
+    "syntax": "reg query \"HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\" /s >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RunKeys_HKCU.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-persistence-wmi",
+    "name": "Persistence \u2014 WMI subscriptions",
+    "description": "DFIR collection: Persistence \u2014 WMI subscriptions",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Persistence",
+    "lines": [
+      "echo Collecting WMI persistence",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WmiObject -Namespace root\\subscription -Class __EventFilter -ErrorAction SilentlyContinue | Format-List * | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WMI_EventFilters.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WmiObject -Namespace root\\subscription -Class __EventConsumer -ErrorAction SilentlyContinue | Format-List * | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WMI_EventConsumers.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WmiObject -Namespace root\\subscription -Class __FilterToConsumerBinding -ErrorAction SilentlyContinue | Format-List * | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WMI_Bindings.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WmiObject -Namespace root\\subscription -Class __FilterToConsumerBinding -ErrorAction SilentlyContinue | Format-List * | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WMI_Bindings.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-security-defender-status",
+    "name": "Windows Defender status and threats",
+    "description": "DFIR collection: Windows Defender status and threats",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "AV/EDR",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-MpComputerStatus | Format-List | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_DefenderStatus.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-MpThreatDetection -ErrorAction SilentlyContinue | Export-Csv -NoTypeInformation -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_DefenderThreats.csv'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-MpThreatDetection -ErrorAction SilentlyContinue | Export-Csv -NoTypeInformation -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_DefenderThreats.csv'\"",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-forensics-usn-journal",
+    "name": "NTFS USN journal (if accessible)",
+    "description": "DFIR collection: NTFS USN journal (if accessible)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo Collecting USN journal metadata",
+      "fsutil usn queryjournal C: > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_USNJournal.txt\" 2>&1"
+    ],
+    "syntax": "fsutil usn queryjournal C: > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_USNJournal.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-forensics-openfiles",
+    "name": "Open files and handles (handle.exe fallback via openfiles)",
+    "description": "DFIR collection: Open files and handles (handle.exe fallback via openfiles)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "openfiles /query /fo table > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_OpenFiles.txt\" 2>&1"
+    ],
+    "syntax": "openfiles /query /fo table > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_OpenFiles.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-network-listening-ports",
+    "name": "Listening ports (netstat)",
+    "description": "DFIR collection: Listening ports (netstat)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "netstat -ano | findstr LISTENING > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_ListeningPorts.txt\"",
+      "netstat -b > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_NetstatWithProcess.txt\" 2>&1"
+    ],
+    "syntax": "netstat -b > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_NetstatWithProcess.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-troubleshoot-sfc",
+    "name": "Troubleshooting \u2014 SFC scan results export",
+    "description": "DFIR collection: Troubleshooting \u2014 SFC scan results export",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Troubleshooting",
+    "lines": [
+      "sfc /scannow > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_SFC_Scan.txt\" 2>&1"
+    ],
+    "syntax": "sfc /scannow > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_SFC_Scan.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-security-lsass-dump-note",
+    "name": "Process list with paths (investigation triage)",
+    "description": "DFIR collection: Process list with paths (investigation triage)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Process",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId, Name, ExecutablePath, CommandLine, CreationDate | Export-Csv -NoTypeInformation -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_ProcessesFull.csv'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId, Name, ExecutablePath, CommandLine, CreationDate | Export-Csv -NoTypeInformation -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_ProcessesFull.csv'\"",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-ad-kerberos",
+    "name": "Domain \u2014 Kerberos policy (nltest / domain)",
+    "description": "DFIR collection: Domain \u2014 Kerberos policy (nltest / domain)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Active Directory",
+    "lines": [
+      "nltest /dsgetdc: > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_DomainController.txt\" 2>&1",
+      "net config workstation > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_WorkstationDomain.txt\" 2>&1"
+    ],
+    "syntax": "net config workstation > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_WorkstationDomain.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-forensics-amcache-registry",
+    "name": "Amcache / InventoryApplicationFile (Win8+)",
+    "description": "DFIR collection: Amcache / InventoryApplicationFile (Win8+)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppCompatFlags\\InventoryApplicationFile\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_AmcacheInventory.txt\" 2>&1"
+    ],
+    "syntax": "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppCompatFlags\\InventoryApplicationFile\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_AmcacheInventory.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-log-powershell",
+    "name": "PowerShell operational log (last 200)",
+    "description": "DFIR collection: PowerShell operational log (last 200)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 200 -ErrorAction SilentlyContinue | Select-Object TimeCreated, Id, Message | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_PowerShellLog.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 200 -ErrorAction SilentlyContinue | Select-Object TimeCreated, Id, Message | Out-File '%USERPROFILE%\\Desktop\\%computername%\\%computername%_PowerShellLog.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-security-rdp-settings",
+    "name": "RDP configuration registry",
+    "description": "DFIR collection: RDP configuration registry",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "reg query \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RDP_Settings.txt\" 2>&1"
+    ],
+    "syntax": "reg query \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RDP_Settings.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-forensics-volume-shadow",
+    "name": "Volume Shadow Copies listing",
+    "description": "DFIR collection: Volume Shadow Copies listing",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "vssadmin list shadows > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_VSS_Shadows.txt\" 2>&1"
+    ],
+    "syntax": "vssadmin list shadows > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_VSS_Shadows.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-prefetch-robocopy",
+    "name": "KAPE \u2014 Prefetch folder (robocopy)",
+    "description": "KAPE \u2014 Prefetch folder (robocopy)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE Prefetch",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Prefetch\" 2>nul",
+      "robocopy \"%SystemRoot%\\Prefetch\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Prefetch\" /COPY:DAT /E /R:0 /W:0 /NP >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE Prefetch",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-wer",
+    "name": "KAPE \u2014 Windows Error Reporting",
+    "description": "KAPE \u2014 Windows Error Reporting",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE WER",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WER\" 2>nul",
+      "robocopy \"%ProgramData%\\Microsoft\\Windows\\WER\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WER\" /COPY:DAT /E /R:0 /W:0 /NP >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE WER",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-srum",
+    "name": "KAPE \u2014 SRUM database (Win8+)",
+    "description": "System Resource Usage Monitor database for program/network usage timeline.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE SRUM",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\SRUM\" 2>nul",
+      "copy /Y \"%SystemRoot%\\System32\\sru\\SRUDB.dat\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\SRUM\\\" 2>nul",
+      "copy /Y \"%SystemRoot%\\System32\\sru\\*.dat\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\SRUM\\\" 2>nul"
+    ],
+    "syntax": "echo KAPE SRUM",
+    "output_type": "binary",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-amcache-hve",
+    "name": "KAPE \u2014 Amcache.hve (inventory)",
+    "description": "KAPE \u2014 Amcache.hve (inventory)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE Amcache",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Amcache\" 2>nul",
+      "copy /Y \"%SystemRoot%\\appcompat\\Programs\\Amcache.hve\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Amcache\\\" 2>nul",
+      "copy /Y \"%SystemRoot%\\appcompat\\Programs\\Amcache.hve.LOG*\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Amcache\\\" 2>nul"
+    ],
+    "syntax": "echo KAPE Amcache",
+    "output_type": "binary",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-shimcache-file",
+    "name": "KAPE \u2014 AppCompatCache (ShimCache) binary",
+    "description": "KAPE \u2014 AppCompatCache (ShimCache) binary",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\AppCompatCache\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_AppCompatCache.dat\" 2>nul"
+    ],
+    "syntax": "reg save \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\AppCompatCache\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_AppCompatCache.dat\" 2>nul",
+    "output_type": "dat",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-bam-dam",
+    "name": "KAPE \u2014 BAM/DAM user settings (execution)",
+    "description": "KAPE \u2014 BAM/DAM user settings (execution)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\\BAM\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; $bam=\"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\bam\\State\\UserSettings\"; $dam=\"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\dam\\State\\UserSettings\"; if(Test-Path $bam){ reg export $bam (Join-Path $d \"bam.reg\") /y 2>$null }; if(Test-Path $dam){ reg export $dam (Join-Path $d \"dam.reg\") /y 2>$null }\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\\BAM\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; $bam=\"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\bam\\State\\UserSettings\"; $dam=\"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\dam\\State\\UserSettings\"; if(Test-Path $bam){ reg export $bam (Join-Path $d \"bam.reg\") /y 2>$null }; if(Test-Path $dam){ reg export $dam (Join-Path $d \"dam.reg\") /y 2>$null }\"",
+    "output_type": "binary",
+    "os_min": "10",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-userassist",
+    "name": "KAPE \u2014 UserAssist registry (GUI program execution)",
+    "description": "KAPE \u2014 UserAssist registry (GUI program execution)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UserAssist.reg\" /y 2>nul"
+    ],
+    "syntax": "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UserAssist.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-muicache",
+    "name": "KAPE \u2014 MUICache / OpenSaveMRU",
+    "description": "KAPE \u2014 MUICache / OpenSaveMRU",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg export \"HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_MuiCache.reg\" /y 2>nul",
+      "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\OpenSavePidlMRU\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_OpenSaveMRU.reg\" /y 2>nul",
+      "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\LastVisitedPidlMRU\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_LastVisitedMRU.reg\" /y 2>nul"
+    ],
+    "syntax": "reg export \"HKCU\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_MuiCache.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-recentdocs",
+    "name": "KAPE \u2014 RecentDocs registry",
+    "description": "KAPE \u2014 RecentDocs registry",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_RecentDocs.reg\" /y 2>nul"
+    ],
+    "syntax": "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_RecentDocs.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-typedpaths",
+    "name": "KAPE \u2014 TypedPaths / WordWheelQuery",
+    "description": "KAPE \u2014 TypedPaths / WordWheelQuery",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\TypedPaths\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_TypedPaths.reg\" /y 2>nul",
+      "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\WordWheelQuery\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_WordWheelQuery.reg\" /y 2>nul"
+    ],
+    "syntax": "reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\TypedPaths\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_TypedPaths.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-timeline-activities",
+    "name": "KAPE \u2014 Windows Timeline (ActivitiesCache.db)",
+    "description": "KAPE \u2014 Windows Timeline (ActivitiesCache.db)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Timeline\" 2>nul",
+      "copy /Y \"%LocalAppData%\\ConnectedDevicesPlatform\\*\\ActivitiesCache.db\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Timeline\\\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Timeline\" 2>nul",
+    "output_type": "binary",
+    "os_min": "10",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-lnk-recent",
+    "name": "KAPE \u2014 Recent LNK files",
+    "description": "KAPE \u2014 Recent LNK files",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE Recent LNK",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\RecentLNK\" 2>nul",
+      "robocopy \"%APPDATA%\\Microsoft\\Windows\\Recent\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\RecentLNK\" /COPY:DAT /S >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE Recent LNK",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-office-mru",
+    "name": "KAPE \u2014 Office MRU registry",
+    "description": "KAPE \u2014 Office MRU registry",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg export \"HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\Open Find\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_Office16_OpenFind.reg\" /y 2>nul",
+      "reg export \"HKCU\\Software\\Microsoft\\Office\\15.0\\Common\\Open Find\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_Office15_OpenFind.reg\" /y 2>nul"
+    ],
+    "syntax": "reg export \"HKCU\\Software\\Microsoft\\Office\\16.0\\Common\\Open Find\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_Office16_OpenFind.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-wmi-repo",
+    "name": "KAPE \u2014 WMI Repository files",
+    "description": "KAPE \u2014 WMI Repository files",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE WMI",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WMI_Repository\" 2>nul",
+      "robocopy \"%SystemRoot%\\System32\\wbem\\Repository\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WMI_Repository\" /COPY:DAT /E >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE WMI",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-bits",
+    "name": "KAPE \u2014 BITS transfer database",
+    "description": "KAPE \u2014 BITS transfer database",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\BITS\" 2>nul",
+      "copy /Y \"%AllUsersProfile%\\Microsoft\\Network\\Downloader\\qmgr*.dat\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\BITS\\\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\BITS\" 2>nul",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-certutil-cache",
+    "name": "KAPE \u2014 CertUtil URL cache",
+    "description": "KAPE \u2014 CertUtil URL cache",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "certutil -urlcache * > \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_CertUtilURLCache.txt\" 2>nul"
+    ],
+    "syntax": "certutil -urlcache * > \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_CertUtilURLCache.txt\" 2>nul",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-zone-identifier",
+    "name": "KAPE \u2014 Zone.Identifier ADS listing (downloads)",
+    "description": "Enumerate Mark-of-the-Web Zone.Identifier alternate data streams under user profile (can be slow).",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$out=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\"; New-Item -Force -ItemType Directory -Path $out | Out-Null; Get-ChildItem -Path $env:USERPROFILE -Recurse -ErrorAction SilentlyContinue | ForEach-Object { Get-Content -Path ($_.FullName + ':Zone.Identifier') -ErrorAction SilentlyContinue | ForEach-Object { [PSCustomObject]@{ File=$_.FullName; Zone=$_ } } } | Export-Csv -NoTypeInformation (Join-Path $out \"$env:COMPUTERNAME`_ZoneIdentifiers.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$out=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\"; New-Item -Force -ItemType Directory -Path $out | Out-Null; Get-ChildItem -Path $env:USERPROFILE -Recurse -ErrorAction SilentlyContinue | ForEach-Object { Get-Content -Path ($_.FullName + ':Zone.Identifier') -ErrorAction SilentlyContinue | ForEach-Object { [PSCustomObject]@{ File=$_.FullName; Zone=$_ } } } | Export-Csv -NoTypeInformation (Join-Path $out \"$env:COMPUTERNAME`_ZoneIdentifiers.csv\")\"",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-rdp-cache",
+    "name": "KAPE \u2014 RDP bitmap cache",
+    "description": "KAPE \u2014 RDP bitmap cache",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE RDP Cache",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\RDP_Cache\" 2>nul",
+      "robocopy \"%LocalAppData%\\Microsoft\\Terminal Server Client\\Cache\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\RDP_Cache\" /COPY:DAT /E /R:0 /W:0 /NP >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE RDP Cache",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-iis-logs",
+    "name": "KAPE \u2014 IIS log files (if present)",
+    "description": "KAPE \u2014 IIS log files (if present)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE IIS",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\IIS_Logs\" 2>nul",
+      "robocopy \"%SystemDrive%\\inetpub\\logs\\LogFiles\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\IIS_Logs\" /COPY:DAT /E >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE IIS",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-defender-support",
+    "name": "KAPE \u2014 Windows Defender support logs",
+    "description": "KAPE \u2014 Windows Defender support logs",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "echo KAPE Defender logs",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Defender_Support\" 2>nul",
+      "robocopy \"%ProgramData%\\Microsoft\\Windows Defender\\Support\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Defender_Support\" /COPY:DAT /E >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_robocopy.log\" 2>&1"
+    ],
+    "syntax": "echo KAPE Defender logs",
+    "output_type": "binary",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-onedrive-logs",
+    "name": "KAPE \u2014 OneDrive sync logs",
+    "description": "KAPE \u2014 OneDrive sync logs",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\OneDrive\" 2>nul",
+      "copy /Y \"%LocalAppData%\\Microsoft\\OneDrive\\logs\\*\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\OneDrive\\\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\OneDrive\" 2>nul",
+    "output_type": "binary",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-teamviewer",
+    "name": "KAPE \u2014 TeamViewer logs (if installed)",
+    "description": "KAPE \u2014 TeamViewer logs (if installed)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\TeamViewer\" 2>nul",
+      "copy /Y \"%AppData%\\TeamViewer\\*\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\TeamViewer\\\" 2>nul",
+      "copy /Y \"%ProgramFiles%\\TeamViewer\\*.log\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\TeamViewer\\\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\TeamViewer\" 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-usbstor-setupapi",
+    "name": "KAPE \u2014 USBSTOR & SetupAPI logs",
+    "description": "KAPE \u2014 USBSTOR & SetupAPI logs",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "reg export \"HKLM\\SYSTEM\\CurrentControlSet\\Enum\\USBSTOR\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_USBSTOR.reg\" /y 2>nul",
+      "copy /Y \"%SystemRoot%\\inf\\setupapi.dev.log\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_setupapi.dev.log\" 2>nul",
+      "copy /Y \"%SystemRoot%\\inf\\setupapi.offline.log\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_setupapi.offline.log\" 2>nul"
+    ],
+    "syntax": "reg export \"HKLM\\SYSTEM\\CurrentControlSet\\Enum\\USBSTOR\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_USBSTOR.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-pagefile-listing",
+    "name": "KAPE \u2014 Pagefile / hiberfil locations (metadata)",
+    "description": "KAPE \u2014 Pagefile / hiberfil locations (metadata)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "wmic pagefile list /format:list > \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_pagefile.txt\" 2>nul",
+      "dir /s /b \"%SystemRoot%\\hiberfil.sys\" 2>nul >> \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_pagefile.txt\""
+    ],
+    "syntax": "wmic pagefile list /format:list > \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_pagefile.txt\" 2>nul",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-syscache",
+    "name": "KAPE \u2014 Syscache (Win8)",
+    "description": "KAPE \u2014 Syscache (Win8)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Syscache\" 2>nul",
+      "copy /Y \"C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microsoft\\Windows\\WebCache\\*\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Syscache\\\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\Syscache\" 2>nul",
+    "output_type": "binary",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-webcache",
+    "name": "KAPE \u2014 WebCacheV01.dat (IE/legacy)",
+    "description": "KAPE \u2014 WebCacheV01.dat (IE/legacy)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WebCache\" 2>nul",
+      "copy /Y \"%LocalAppData%\\Microsoft\\Windows\\WebCache\\WebCacheV01.dat\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WebCache\\\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\WebCache\" 2>nul",
+    "output_type": "binary",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-outlook-pst-list",
+    "name": "KAPE \u2014 Outlook PST/OST paths",
+    "description": "KAPE \u2014 Outlook PST/OST paths",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-ChildItem -Path $env:USERPROFILE -Include *.pst,*.ost -Recurse -ErrorAction SilentlyContinue | Select-Object FullName,Length,LastWriteTime | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\\$env:COMPUTERNAME`_OutlookStores.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-ChildItem -Path $env:USERPROFILE -Include *.pst,*.ost -Recurse -ErrorAction SilentlyContinue | Select-Object FullName,Length,LastWriteTime | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\\$env:COMPUTERNAME`_OutlookStores.csv\")\"",
+    "output_type": "csv",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-all-user-profiles",
+    "name": "KAPE \u2014 List all user profile paths",
+    "description": "KAPE \u2014 List all user profile paths",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "dir /b \"%SystemDrive%\\Users\" > \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UserProfiles.txt\" 2>nul",
+      "wmic profile list brief >> \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UserProfiles.txt\" 2>nul"
+    ],
+    "syntax": "dir /b \"%SystemDrive%\\Users\" > \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UserProfiles.txt\" 2>nul",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-ntuser-all-users",
+    "name": "KAPE \u2014 NTUSER.DAT per profile (if accessible)",
+    "description": "Copy NTUSER.DAT from each profile (requires rights; files may be locked).",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\\NTUSER\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; Get-ChildItem C:\\Users -Directory | ForEach-Object { $f=Join-Path $_.FullName \"NTUSER.DAT\"; if(Test-Path $f){ Copy-Item $f (Join-Path $d ($_.Name + \"_NTUSER.DAT\")) -ErrorAction SilentlyContinue } }\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Artifacts\\NTUSER\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; Get-ChildItem C:\\Users -Directory | ForEach-Object { $f=Join-Path $_.FullName \"NTUSER.DAT\"; if(Test-Path $f){ Copy-Item $f (Join-Path $d ($_.Name + \"_NTUSER.DAT\")) -ErrorAction SilentlyContinue } }\"",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-kape-programs-inventory",
+    "name": "KAPE \u2014 Installed programs (registry uninstall keys)",
+    "description": "KAPE \u2014 Installed programs (registry uninstall keys)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "System",
+    "lines": [
+      "reg export \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UninstallHKLM.reg\" /y 2>nul",
+      "reg export \"HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UninstallHKLM32.reg\" /y 2>nul",
+      "reg export \"HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UninstallHKCU.reg\" /y 2>nul"
+    ],
+    "syntax": "reg export \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_UninstallHKLM.reg\" /y 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "kape",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-audit-cleared",
+    "name": "WEF \u2014 Event log cleared (1102, 104)",
+    "description": "Detect security audit or log clearing \u2014 common anti-forensics.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=1102} -MaxEvents 200 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_1102_AuditCleared.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''System''; ID=104} -MaxEvents 200 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_104_LogCleared.txt'\""
+    ],
+    "syntax": "Security 1102 / System 104",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-logon-all",
+    "name": "WEF \u2014 Logon events (4624, 4625, 4648, 4672)",
+    "description": "WEF \u2014 Logon events (4624, 4625, 4648, 4672)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=4624,4625,4648,4672} -MaxEvents 1000 -EA SilentlyContinue | Select TimeCreated,Id,Message | Format-Table -Wrap | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_LogonEvents.txt'\""
+    ],
+    "syntax": "Security IDs 4624,4625,4648,4672",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-account-changes",
+    "name": "WEF \u2014 Account management (4720-4726, 4732, 4738)",
+    "description": "WEF \u2014 Account management (4720-4726, 4732, 4738)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=4720,4722,4723,4724,4725,4726,4732,4738} -MaxEvents 500 -EA SilentlyContinue | Select TimeCreated,Id,Message | Format-Table -Wrap | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_AccountChanges.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=4720,4722,4723,4724,4725,4726,4732,4738} -MaxEvents 500 -EA SilentlyContinue | Select TimeCreated,Id,Message | Format-Table -Wrap | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_AccountChanges.txt'\"",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-service-install",
+    "name": "WEF \u2014 Service installed (7045, 4697)",
+    "description": "WEF \u2014 Service installed (7045, 4697)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''System''; ID=7045} -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_7045_ServiceInstall.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=4697} -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_4697_ServiceAdded.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''System''; ID=7045} -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_7045_ServiceInstall.txt'\"",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-scheduled-task",
+    "name": "WEF \u2014 Scheduled task created (4698-4702)",
+    "description": "WEF \u2014 Scheduled task created (4698-4702)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=4698,4699,4700,4701,4702} -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_ScheduledTasks.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Security''; ID=4698,4699,4700,4701,4702} -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_ScheduledTasks.txt'\"",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-powershell-script",
+    "name": "WEF \u2014 PowerShell script block (4104) & module (4103)",
+    "description": "WEF \u2014 PowerShell script block (4104) & module (4103)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-PowerShell/Operational'' -FilterXPath ''*[System[(EventID=4104)]]'' -MaxEvents 300 -EA SilentlyContinue | Select TimeCreated,Message | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_PS4104_ScriptBlock.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-PowerShell/Operational'' -FilterXPath ''*[System[(EventID=4103)]]'' -MaxEvents 200 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_PS4103_Module.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-PowerShell/Operational'' -FilterXPath ''*[System[(EventID=4104)]]'' -MaxEvents 300 -EA SilentlyContinue | Select TimeCreated,Message | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_PS4104_ScriptBlock.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-wmi-activity",
+    "name": "WEF \u2014 WMI activity (5857-5861)",
+    "description": "WEF \u2014 WMI activity (5857-5861)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-WMI-Activity/Operational'' -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_WMIActivity.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-WMI-Activity/Operational'' -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_WMIActivity.txt'\"",
+    "output_type": "text",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-rdp",
+    "name": "WEF \u2014 RDP session (1149, 4778, 4779, 21/22/23/24/25)",
+    "description": "WEF \u2014 RDP session (1149, 4778, 4779, 21/22/23/24/25)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-TerminalServices-LocalSessionManager/Operational''; ID=21,22,23,24,25} -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_RDP_LocalSession.txt'\"",
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational''; ID=1149} -MaxEvents 200 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_RDP_1149.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-TerminalServices-LocalSessionManager/Operational''; ID=21,22,23,24,25} -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_RDP_LocalSession.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-defender-malware",
+    "name": "WEF \u2014 Defender detections & scans",
+    "description": "WEF \u2014 Defender detections & scans",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "AV/EDR",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Windows Defender/Operational'' -MaxEvents 500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_DefenderOperational.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Windows Defender/Operational'' -MaxEvents 500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_DefenderOperational.txt'\"",
+    "output_type": "text",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-sysmon",
+    "name": "WEF \u2014 Sysmon events (if installed)",
+    "description": "Exports Sysmon operational log when the agent is present.",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Sysmon/Operational'' -MaxEvents 2000 -EA SilentlyContinue | Select TimeCreated,Id,Message | Format-Table -Wrap | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon_All.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Sysmon/Operational'' -MaxEvents 2000 -EA SilentlyContinue | Select TimeCreated,Id,Message | Format-Table -Wrap | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon_All.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-sysmon-process-create",
+    "name": "WEF \u2014 Sysmon process create (Event ID 1)",
+    "description": "WEF \u2014 Sysmon process create (Event ID 1)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-Sysmon/Operational''; ID=1} -MaxEvents 1500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon1_ProcessCreate.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-Sysmon/Operational''; ID=1} -MaxEvents 1500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon1_ProcessCreate.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-sysmon-network",
+    "name": "WEF \u2014 Sysmon network (Event ID 3)",
+    "description": "WEF \u2014 Sysmon network (Event ID 3)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-Sysmon/Operational''; ID=3} -MaxEvents 1500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon3_Network.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-Sysmon/Operational''; ID=3} -MaxEvents 1500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon3_Network.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-sysmon-file",
+    "name": "WEF \u2014 Sysmon file create (Event ID 11)",
+    "description": "WEF \u2014 Sysmon file create (Event ID 11)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-Sysmon/Operational''; ID=11} -MaxEvents 1000 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon11_FileCreate.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName=''Microsoft-Windows-Sysmon/Operational''; ID=11} -MaxEvents 1000 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_Sysmon11_FileCreate.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-bits-client",
+    "name": "WEF \u2014 BITS client operational",
+    "description": "WEF \u2014 BITS client operational",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Bits-Client/Operational'' -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_BITS.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Bits-Client/Operational'' -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_BITS.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-task-scheduler",
+    "name": "WEF \u2014 Task Scheduler operational",
+    "description": "WEF \u2014 Task Scheduler operational",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-TaskScheduler/Operational'' -MaxEvents 500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_TaskScheduler.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-TaskScheduler/Operational'' -MaxEvents 500 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_TaskScheduler.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-firewall",
+    "name": "WEF \u2014 Windows Firewall event log",
+    "description": "WEF \u2014 Windows Firewall event log",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Windows Firewall With Advanced Security/Firewall'' -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_FirewallEvents.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-Windows Firewall With Advanced Security/Firewall'' -MaxEvents 400 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_FirewallEvents.txt'\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-appx-deployment",
+    "name": "WEF \u2014 AppX deployment (suspicious packages)",
+    "description": "WEF \u2014 AppX deployment (suspicious packages)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-AppXDeploymentServer/Operational'' -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_AppXDeploy.txt'\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName ''Microsoft-Windows-AppXDeploymentServer/Operational'' -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File -Encoding UTF8 '%USERPROFILE%\\Desktop\\%computername%\\%computername%_WEF_AppXDeploy.txt'\"",
+    "output_type": "text",
+    "os_min": "10",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-export-all-main",
+    "name": "WEF \u2014 Export main logs (.evtx)",
+    "description": "Exports primary logs to EVTX subfolder (names sanitized on disk).",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "echo Exporting core event logs",
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\EVTX\" 2>nul",
+      "for %%G in (System Application Security \"Microsoft-Windows-PowerShell/Operational\" \"Microsoft-Windows-Sysmon/Operational\" \"Microsoft-Windows-Windows Defender/Operational\") do (",
+      "  wevtutil epl \"%%G\" \"%USERPROFILE%\\Desktop\\%computername%\\EVTX\\%COMPUTERNAME%_%%G.evtx\" 2>nul",
+      ")"
+    ],
+    "syntax": "echo Exporting core event logs",
+    "output_type": "evtx",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-wef-failed-logins-summary",
+    "name": "WEF \u2014 Failed logon summary CSV",
+    "description": "WEF \u2014 Failed logon summary CSV",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Log Analysis",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4625} -MaxEvents 2000 -EA SilentlyContinue | ForEach-Object { $x=[xml]$_.ToXml(); [PSCustomObject]@{ Time=$_.TimeCreated; User=$x.Event.EventData.Data[5].'#text'; IP=$x.Event.EventData.Data[19].'#text' } } | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_FailedLogons.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4625} -MaxEvents 2000 -EA SilentlyContinue | ForEach-Object { $x=[xml]$_.ToXml(); [PSCustomObject]@{ Time=$_.TimeCreated; User=$x.Event.EventData.Data[5].'#text'; IP=$x.Event.EventData.Data[19].'#text' } } | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_FailedLogons.csv\")\"",
+    "output_type": "csv",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "wef",
+      "eventlog"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-ir-triage-banner",
+    "name": "IR \u2014 Collection header / timestamp",
+    "description": "IR \u2014 Collection header / timestamp",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "System",
+    "lines": [
+      "echo The Collector Windows triage > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_00_HEADER.txt\"",
+      "echo Started: %DATE% %TIME% >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_00_HEADER.txt\"",
+      "hostname >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_00_HEADER.txt\"",
+      "whoami /all >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_00_HEADER.txt\""
+    ],
+    "syntax": "echo The Collector Windows triage > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_00_HEADER.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "triage"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-local-admins",
+    "name": "Pentest \u2014 Local administrators",
+    "description": "Pentest \u2014 Local administrators",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "net localgroup administrators > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_LocalAdmins.txt\""
+    ],
+    "syntax": "net localgroup administrators > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_LocalAdmins.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-shares",
+    "name": "Pentest \u2014 Share permissions",
+    "description": "Pentest \u2014 Share permissions",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "net share > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Shares.txt\"",
+      "net view > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_NetView.txt\" 2>&1"
+    ],
+    "syntax": "net share > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Shares.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-hotfixes",
+    "name": "Troubleshooting \u2014 Installed hotfixes",
+    "description": "Troubleshooting \u2014 Installed hotfixes",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "System",
+    "lines": [
+      "wmic qfe get HotFixID,Description,InstalledOn > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Hotfixes.txt\""
+    ],
+    "syntax": "wmic qfe get HotFixID,Description,InstalledOn > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Hotfixes.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-env-vars",
+    "name": "Troubleshooting \u2014 Environment variables",
+    "description": "Troubleshooting \u2014 Environment variables",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "System",
+    "lines": [
+      "set > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Environment.txt\""
+    ],
+    "syntax": "set > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Environment.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-path-permissions",
+    "name": "Pentest \u2014 Unquoted service paths",
+    "description": "Pentest \u2014 Unquoted service paths",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Service",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WmiObject Win32_Service | Where-Object { $_.PathName -and $_.PathName -notmatch '^\"' -and $_.PathName -match ' ' } | Select Name,DisplayName,PathName,StartMode,State | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_UnquotedServicePaths.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WmiObject Win32_Service | Where-Object { $_.PathName -and $_.PathName -notmatch '^\"' -and $_.PathName -match ' ' } | Select Name,DisplayName,PathName,StartMode,State | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_UnquotedServicePaths.csv\")\"",
+    "output_type": "csv",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-weak-service-acls",
+    "name": "Pentest \u2014 Services with weak permissions (summary)",
+    "description": "Pentest \u2014 Services with weak permissions (summary)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Service",
+    "lines": [
+      "sc sdshow type= service state= all > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_ServiceACLs.txt\" 2>&1"
+    ],
+    "syntax": "sc sdshow type= service state= all > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_ServiceACLs.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-autoruns-registry",
+    "name": "Pentest \u2014 Autoruns (registry Run keys + Winlogon)",
+    "description": "Pentest \u2014 Autoruns (registry Run keys + Winlogon)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Persistence",
+    "lines": [
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Autoruns.txt\"",
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /s >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Autoruns.txt\"",
+      "reg query \"HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\" /s >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Autoruns.txt\""
+    ],
+    "syntax": "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_Autoruns.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-cached-creds",
+    "name": "Pentest \u2014 Cached logon count (metadata)",
+    "description": "Requires SYSTEM; documents presence of cached credential slots.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "reg query \"HKLM\\SECURITY\\Cache\" > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_CachedLogons.txt\" 2>&1"
+    ],
+    "syntax": "reg query \"HKLM\\SECURITY\\Cache\" > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_CachedLogons.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-laps",
+    "name": "Pentest \u2014 LAPS (if deployed)",
+    "description": "Pentest \u2014 LAPS (if deployed)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "reg query \"HKLM\\SOFTWARE\\Policies\\Microsoft Services\\AdmPwd\" > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_LAPS.txt\" 2>&1",
+      "reg query \"HKLM\\SOFTWARE\\LAPS\" >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_LAPS.txt\" 2>&1"
+    ],
+    "syntax": "reg query \"HKLM\\SOFTWARE\\Policies\\Microsoft Services\\AdmPwd\" > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_LAPS.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trouble-dism-health",
+    "name": "Troubleshooting \u2014 DISM component store",
+    "description": "Troubleshooting \u2014 DISM component store",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Troubleshooting",
+    "lines": [
+      "DISM /Online /Cleanup-Image /ScanHealth > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_DISM_ScanHealth.txt\" 2>&1"
+    ],
+    "syntax": "DISM /Online /Cleanup-Image /ScanHealth > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_DISM_ScanHealth.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trouble-chkdsk-readonly",
+    "name": "Troubleshooting \u2014 chkdsk scan (read-only)",
+    "description": "Troubleshooting \u2014 chkdsk scan (read-only)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Troubleshooting",
+    "lines": [
+      "chkdsk > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_CHKDSK.txt\" 2>&1"
+    ],
+    "syntax": "chkdsk > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_CHKDSK.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trouble-reliability",
+    "name": "Troubleshooting \u2014 Reliability monitor events",
+    "description": "Troubleshooting \u2014 Reliability monitor events",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Troubleshooting",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName 'Microsoft-Windows-Diagnosis-Operational' -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_Reliability.txt\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-WinEvent -LogName 'Microsoft-Windows-Diagnosis-Operational' -MaxEvents 300 -EA SilentlyContinue | Format-List | Out-File (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_Reliability.txt\")\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trouble-boot-config",
+    "name": "Troubleshooting \u2014 BCD boot configuration",
+    "description": "Troubleshooting \u2014 BCD boot configuration",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "System",
+    "lines": [
+      "bcdedit /enum all > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_BCD.txt\" 2>&1"
+    ],
+    "syntax": "bcdedit /enum all > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_BCD.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "vista",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trouble-memory",
+    "name": "Troubleshooting \u2014 Memory summary",
+    "description": "Troubleshooting \u2014 Memory summary",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Hardware",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_PhysicalMemory | Select BankLabel,Capacity,Speed,Manufacturer,PartNumber | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_Memory.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_PhysicalMemory | Select BankLabel,Capacity,Speed,Manufacturer,PartNumber | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_Memory.csv\")\"",
+    "output_type": "csv",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-trouble-disk-smart",
+    "name": "Troubleshooting \u2014 Disk drive info",
+    "description": "Troubleshooting \u2014 Disk drive info",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Hardware",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_DiskDrive | Select Model,Size,Status,InterfaceType,SerialNumber | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_Disks.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-CimInstance Win32_DiskDrive | Select Model,Size,Status,InterfaceType,SerialNumber | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_Disks.csv\")\"",
+    "output_type": "csv",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-listening-ports-process",
+    "name": "Pentest \u2014 Listening ports with owning process",
+    "description": "Pentest \u2014 Listening ports with owning process",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-NetTCPConnection -State Listen -EA SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_ListenPorts.csv)\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-NetTCPConnection -State Listen -EA SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_ListenPorts.csv)\"",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-dns-cache-export",
+    "name": "Pentest \u2014 DNS client cache export",
+    "description": "Pentest \u2014 DNS client cache export",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-DnsClientCache | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_DNSCache.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-DnsClientCache | Export-Csv -NoTypeInformation (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_DNSCache.csv\")\"",
+    "output_type": "csv",
+    "os_min": "8",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-proxy-settings",
+    "name": "Pentest \u2014 WinHTTP / IE proxy settings",
+    "description": "Pentest \u2014 WinHTTP / IE proxy settings",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "netsh winhttp show proxy > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_WinHTTPProxy.txt\"",
+      "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyEnable > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_IEProxy.txt\"",
+      "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyServer >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_IEProxy.txt\""
+    ],
+    "syntax": "netsh winhttp show proxy > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_WinHTTPProxy.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-smb-signing",
+    "name": "Pentest \u2014 SMB signing configuration",
+    "description": "Pentest \u2014 SMB signing configuration",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "reg query \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters\" /v RequireSecuritySignature > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_SMBSigning.txt\"",
+      "reg query \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters\" /v RequireSecuritySignature >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_SMBSigning.txt\""
+    ],
+    "syntax": "reg query \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters\" /v RequireSecuritySignature > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_SMBSigning.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-uac",
+    "name": "Pentest \u2014 UAC / CredentialGuard settings",
+    "description": "Pentest \u2014 UAC / CredentialGuard settings",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v EnableLUA > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_UAC.txt\"",
+      "reg query \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\DeviceGuard\" >> \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_UAC.txt\" 2>&1"
+    ],
+    "syntax": "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v EnableLUA > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_UAC.txt\"",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-applocker",
+    "name": "Pentest \u2014 AppLocker policy (if used)",
+    "description": "Pentest \u2014 AppLocker policy (if used)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-AppLockerPolicy -Effective -EA SilentlyContinue | Out-File (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_AppLocker.txt\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Get-AppLockerPolicy -Effective -EA SilentlyContinue | Out-File (Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\$env:COMPUTERNAME`_AppLocker.txt\")\"",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-dotnet-versions",
+    "name": "Troubleshooting \u2014 .NET versions installed",
+    "description": "Troubleshooting \u2014 .NET versions installed",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "System",
+    "lines": [
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_DotNet.txt\" 2>&1"
+    ],
+    "syntax": "reg query \"HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_DotNet.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-remote-desktop-users",
+    "name": "Pentest \u2014 Remote Desktop Users group",
+    "description": "Pentest \u2014 Remote Desktop Users group",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "User/Group",
+    "lines": [
+      "net localgroup \"Remote Desktop Users\" > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RDPUsers.txt\" 2>&1"
+    ],
+    "syntax": "net localgroup \"Remote Desktop Users\" > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_RDPUsers.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-winrm",
+    "name": "Pentest \u2014 WinRM configuration",
+    "description": "Pentest \u2014 WinRM configuration",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "winrm get winrm/config > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_WinRM.txt\" 2>&1"
+    ],
+    "syntax": "winrm get winrm/config > \"%USERPROFILE%\\Desktop\\%computername%\\%computername%_WinRM.txt\" 2>&1",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-pshistory",
+    "name": "Pentest \u2014 PowerShell console history file",
+    "description": "Pentest \u2014 PowerShell console history file",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Forensics",
+    "lines": [
+      "copy /Y \"%AppData%\\Microsoft\\Windows\\PowerShell\\PSReadLine\\ConsoleHost_history.txt\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_PSHistory.txt\" 2>nul"
+    ],
+    "syntax": "copy /Y \"%AppData%\\Microsoft\\Windows\\PowerShell\\PSReadLine\\ConsoleHost_history.txt\" \"%USERPROFILE%\\Desktop\\%computername%\\Artifacts\\%computername%_PSHistory.txt\" 2>nul",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-pentest-clsid-hijack",
+    "name": "Pentest \u2014 COM hijack candidates (InprocServer32 without DLL)",
+    "description": "Pentest \u2014 COM hijack candidates (InprocServer32 without DLL)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Persistence",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$o=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\"; Get-ChildItem HKLM:\\Software\\Classes\\CLSID -EA SilentlyContinue | ForEach-Object { $p=Join-Path $_.PSPath \"InprocServer32\"; if(Test-Path $p){ $d=(Get-ItemProperty $p).\"(default)\"; if($d -and -not (Test-Path $d)){ [PSCustomObject]@{ CLSID=$_.PSChildName; DLL=$d } } } } | Export-Csv -NoTypeInformation (Join-Path $o \"$env:COMPUTERNAME`_COMHijack.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$o=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\"; Get-ChildItem HKLM:\\Software\\Classes\\CLSID -EA SilentlyContinue | ForEach-Object { $p=Join-Path $_.PSPath \"InprocServer32\"; if(Test-Path $p){ $d=(Get-ItemProperty $p).\"(default)\"; if($d -and -not (Test-Path $d)){ [PSCustomObject]@{ CLSID=$_.PSChildName; DLL=$d } } } } | Export-Csv -NoTypeInformation (Join-Path $o \"$env:COMPUTERNAME`_COMHijack.csv\")\"",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "dfir",
+      "pentest",
+      "troubleshoot"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-msinfo",
+    "name": "Configuration review \u2014 MSInfo32 report",
+    "description": "Full system configuration snapshot (NFO) for configuration review.",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Configuration",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+      "msinfo32 /nfo \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_msinfo32.nfo\" /categories +all 2>nul",
+      "echo MSInfo export attempted > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_msinfo_note.txt\""
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+    "output_type": "binary",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-network-full",
+    "name": "Configuration review \u2014 network (adapters, DNS, routes, wins)",
+    "description": "Configuration review \u2014 network (adapters, DNS, routes, wins)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Network",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+      "ipconfig /all > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_ipconfig_all.txt\"",
+      "netsh interface show interface >> \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_ipconfig_all.txt\"",
+      "route print >> \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_routes.txt\"",
+      "netsh winhttp show proxy > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_proxy.txt\"",
+      "netsh wlan show profiles >> \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_wlan_profiles.txt\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-system-settings",
+    "name": "Configuration review \u2014 computer name, domain, timezone, power",
+    "description": "Configuration review \u2014 computer name, domain, timezone, power",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Configuration",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+      "systeminfo > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_systeminfo.txt\"",
+      "wmic computersystem get Name,Domain,PartOfDomain,Workgroup /format:list >> \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_systeminfo.txt\"",
+      "tzutil /g > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_timezone.txt\" 2>nul",
+      "powercfg /list > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_powercfg.txt\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+    "output_type": "text",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-services-startup",
+    "name": "Configuration review \u2014 services (startup type & status)",
+    "description": "Configuration review \u2014 services (startup type & status)",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Service",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Configuration\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; Get-CimInstance Win32_Service | Select Name,DisplayName,State,StartMode,PathName,StartName | Export-Csv -NoTypeInformation (Join-Path $d \"$env:COMPUTERNAME`_Services.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\Configuration\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; Get-CimInstance Win32_Service | Select Name,DisplayName,State,StartMode,PathName,StartName | Export-Csv -NoTypeInformation (Join-Path $d \"$env:COMPUTERNAME`_Services.csv\")\"",
+    "output_type": "csv",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-registry-policies",
+    "name": "Configuration review \u2014 key policy registry (RDP, UAC, NTLM, LSA)",
+    "description": "Configuration review \u2014 key policy registry (RDP, UAC, NTLM, LSA)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Security",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+      "reg export \"HKLM\\SOFTWARE\\Policies\" \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_HKLM_Policies.reg\" /y 2>nul",
+      "reg export \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\" \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_RDP_policy.reg\" /y 2>nul",
+      "reg export \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa\" \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_LSA.reg\" /y 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-windows-update",
+    "name": "Configuration review \u2014 Windows Update settings",
+    "description": "Configuration review \u2014 Windows Update settings",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Configuration",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+      "reg query \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\" /s > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_WU_Policy.txt\" 2>nul",
+      "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\" /s >> \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_WU_Policy.txt\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-config-features-optional",
+    "name": "Configuration review \u2014 optional features & capabilities",
+    "description": "Configuration review \u2014 optional features & capabilities",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Configuration",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+      "dism /online /get-features /format:table > \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_features.txt\" 2>nul",
+      "dism /online /get-capabilities >> \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\\%computername%_features.txt\" 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\Configuration\" 2>nul",
+    "output_type": "text",
+    "os_min": "7",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "config",
+      "review"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-artifact-teamviewer-logs",
+    "name": "TeamViewer \u2014 logs and config (AppData & ProgramData)",
+    "description": "TeamViewer \u2014 logs and config (AppData & ProgramData)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Remote Access",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\" 2>nul",
+      "xcopy \"%APPDATA%\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\AppData\" /E /I /Y 2>nul",
+      "xcopy \"%ProgramData%\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\ProgramData\" /E /I /Y 2>nul",
+      "xcopy \"%ProgramFiles%\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\ProgramFiles\" /E /I /Y 2>nul",
+      "xcopy \"%ProgramFiles(x86)%\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\ProgramFiles_x86\" /E /I /Y 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\" 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "teamviewer",
+      "remote",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-artifact-teamviewer-registry",
+    "name": "TeamViewer \u2014 registry (ClientID, settings)",
+    "description": "TeamViewer \u2014 registry (ClientID, settings)",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\" 2>nul",
+      "reg export \"HKCU\\Software\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\%computername%_TeamViewer_HKCU.reg\" /y 2>nul",
+      "reg export \"HKLM\\SOFTWARE\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\%computername%_TeamViewer_HKLM.reg\" /y 2>nul",
+      "reg export \"HKLM\\SOFTWARE\\WOW6432Node\\TeamViewer\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\\%computername%_TeamViewer_HKLM32.reg\" /y 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\TeamViewer\" 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "teamviewer",
+      "remote"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-artifact-teamviewer-connections",
+    "name": "TeamViewer \u2014 connection manager text export",
+    "description": "TeamViewer \u2014 connection manager text export",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Remote Access",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\RemoteAccess\\TeamViewer\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; Get-ChildItem -Path $env:APPDATA,\"$env:ProgramData\\TeamViewer\" -Recurse -Include *.log,*.txt,connections*.txt -ErrorAction SilentlyContinue | Select FullName,Length,LastWriteTime | Export-Csv -NoTypeInformation (Join-Path $d \"$env:COMPUTERNAME`_TeamViewer_Files.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\RemoteAccess\\TeamViewer\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; Get-ChildItem -Path $env:APPDATA,\"$env:ProgramData\\TeamViewer\" -Recurse -Include *.log,*.txt,connections*.txt -ErrorAction SilentlyContinue | Select FullName,Length,LastWriteTime | Export-Csv -NoTypeInformation (Join-Path $d \"$env:COMPUTERNAME`_TeamViewer_Files.csv\")\"",
+    "output_type": "csv",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "teamviewer",
+      "remote"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-artifact-anydesk-files",
+    "name": "AnyDesk \u2014 config, traces, and session files",
+    "description": "AnyDesk \u2014 config, traces, and session files",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Remote Access",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\" 2>nul",
+      "xcopy \"%APPDATA%\\AnyDesk\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\\AppData\" /E /I /Y 2>nul",
+      "xcopy \"%ProgramData%\\AnyDesk\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\\ProgramData\" /E /I /Y 2>nul",
+      "xcopy \"%ProgramFiles(x86)%\\AnyDesk\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\\ProgramFiles\" /E /I /Y 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\" 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "anydesk",
+      "remote",
+      "artifact"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-artifact-anydesk-ad-trace",
+    "name": "AnyDesk \u2014 ad.trace and connection history",
+    "description": "AnyDesk \u2014 ad.trace and connection history",
+    "shell": "powershell",
+    "platform": "windows",
+    "category": "Remote Access",
+    "lines": [
+      "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\RemoteAccess\\AnyDesk\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; $paths=@(\"$env:APPDATA\\AnyDesk\",\"$env:ProgramData\\AnyDesk\"); foreach($p in $paths){ if(Test-Path $p){ Get-ChildItem $p -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -match \"trace|conf|cache|history\" } | Copy-Item -Destination $d -Recurse -Force -ErrorAction SilentlyContinue } }; Get-ChildItem $d -Recurse | Select FullName,Length,LastWriteTime | Export-Csv -NoTypeInformation (Join-Path $d \"$env:COMPUTERNAME`_AnyDesk_Manifest.csv\")\""
+    ],
+    "syntax": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=Join-Path $env:USERPROFILE \"Desktop\\$env:COMPUTERNAME\\RemoteAccess\\AnyDesk\"; New-Item -Force -ItemType Directory -Path $d | Out-Null; $paths=@(\"$env:APPDATA\\AnyDesk\",\"$env:ProgramData\\AnyDesk\"); foreach($p in $paths){ if(Test-Path $p){ Get-ChildItem $p -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -match \"trace|conf|cache|history\" } | Copy-Item -Destination $d -Recurse -Force -ErrorAction SilentlyContinue } }; Get-ChildItem $d -Recurse | Select FullName,Length,LastWriteTime | Export-Csv -NoTypeInformation (Join-Path $d \"$env:COMPUTERNAME`_AnyDesk_Manifest.csv\")\"",
+    "output_type": "csv",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "anydesk",
+      "remote"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  },
+  {
+    "id": "win-artifact-anydesk-registry",
+    "name": "AnyDesk \u2014 registry settings",
+    "description": "AnyDesk \u2014 registry settings",
+    "shell": "cmd",
+    "platform": "windows",
+    "category": "Registry",
+    "lines": [
+      "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\" 2>nul",
+      "reg export \"HKCU\\Software\\AnyDesk\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\\%computername%_AnyDesk_HKCU.reg\" /y 2>nul",
+      "reg export \"HKLM\\SOFTWARE\\AnyDesk\" \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\\%computername%_AnyDesk_HKLM.reg\" /y 2>nul"
+    ],
+    "syntax": "mkdir \"%USERPROFILE%\\Desktop\\%computername%\\RemoteAccess\\AnyDesk\" 2>nul",
+    "output_type": "binary",
+    "os_min": "xp",
+    "os_max": "11",
+    "distros": [],
+    "dfir_tags": [
+      "anydesk",
+      "remote"
+    ],
+    "parameters": [],
+    "examples": [],
+    "required_step": false,
+    "favorite": false
+  }
+]

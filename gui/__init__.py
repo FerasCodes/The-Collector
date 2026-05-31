@@ -1,0 +1,1 @@
+"""The Collector graphical studio."""
