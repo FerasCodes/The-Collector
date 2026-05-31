@@ -1,15 +1,15 @@
-# The Collector 
+# The Collector 2.0
 
-**Script Studio** — build and run Windows (XP–11) and Linux (RHEL / Ubuntu) evidence-collection scripts from a dark IDE-style GUI or CLI.
+**Script Studio** - build and run Windows (XP–11) and Linux (RHEL / Ubuntu) evidence-collection scripts from a dark IDE-style GUI or CLI. Built by Feras Faqeeh.
 
 ## Features
 
-- **Command library** — migrated from your original `plugins/*.json`, plus extra DFIR/pentest collectors (persistence, logs, WMI, Defender, USN, SUID, journal, etc.).
-- **Output-aware** — commands tagged as `text`, `csv`, `evtx`, `dat`, `json`, `binary`, or `zip`; file copies keep native formats.
-- **OS / distro filters** — Windows XP through 11; Linux RHEL, Ubuntu, or generic.
-- **Script builder** — drag sequence of collection steps; live preview as `.bat`, `.ps1`, or `.sh`.
-- **Categories** — File System, Network, Process, Registry, Security, Persistence, Forensics, AV/EDR, AD, Browser, and more.
-- **CLI** — same catalog for headless script generation (compatible with your original `-o` / `-b` / `-n` workflow).
+- **Command library** - migrated from your original `plugins/*.json`, plus extra DFIR/pentest collectors (persistence, logs, WMI, Defender, USN, SUID, journal, etc.).
+- **Output-aware** - commands tagged as `text`, `csv`, `evtx`, `dat`, `json`, `binary`, or `zip`; file copies keep native formats.
+- **OS / distro filters** - Windows XP through 11; Linux RHEL, Ubuntu, or generic.
+- **Script builder** - drag sequence of collection steps; live preview as `.bat`, `.ps1`, or `.sh`.
+- **Categories** - File System, Network, Process, Registry, Security, Persistence, Forensics, AV/EDR, AD, Browser, and more.
+- **CLI** - same catalog for headless script generation (compatible with your original `-o` / `-b` / `-n` workflow).
 
 ## Quick start (web browser)
 
@@ -18,7 +18,7 @@ pip install -r requirements.txt
 python collector_gui.py
 ```
 
-Your default browser opens to **http://127.0.0.1:PORT** — build scripts, browse commands, and download `.bat` / `.ps1` files from there.
+Your default browser opens to **http://127.0.0.1:PORT** - build scripts, browse commands, and download `.bat` / `.ps1` files from there.
 
 ### Executable
 
@@ -134,11 +134,11 @@ Each command object supports:
 
 ## Notes
 
-- **Run locally** — “Run Script” executes on the machine where the studio is open (Windows for `.bat`/`.ps1`).
-- **Elevation** — registry hives, event logs, and some artifacts need Administrator.
-- **MFTEcmd** — optional; place `MFTEcmd.exe` under `modules/` if you use the MFT collection step.
-- **Favorites / recent** — stored under `%USERPROFILE%\.the-collector\`.
+- **Run locally** - “Run Script” executes on the machine where the studio is open (Windows for `.bat`/`.ps1`).
+- **Elevation** - registry hives, event logs, and some artifacts need Administrator.
+- **MFTEcmd** - optional; place `MFTEcmd.exe` under `modules/` if you use the MFT collection step.
+- **Favorites / recent** - stored under `%USERPROFILE%\.the-collector\`.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).
