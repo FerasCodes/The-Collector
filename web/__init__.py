@@ -1,0 +1,1 @@
+"""The Collector web studio."""

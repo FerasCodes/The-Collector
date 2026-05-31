@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ app_name }} — {{ app_subtitle }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" class="logo" onerror="this.style.display='none'" />
+      <div>
+        <h1>{{ app_name }}</h1>
+        <p class="subtitle">{{ app_subtitle }}</p>
+        <p class="stats" id="repo-stats">Loading commands…</p>
+        <p class="credit">{{ app_credit }}</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <input type="search" id="search" placeholder="Search commands…" />
+      <div class="platform-toggle">
+        <button type="button" class="plat active" data-platform="windows">Windows</button>
+        <button type="button" class="plat" data-platform="linux">Linux</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>Menu</h2>
+      <div class="stats-box" id="sidebar-stats"></div>
+      <button type="button" class="nav-btn" id="btn-all">Browse all commands</button>
+      <button type="button" class="nav-btn" id="btn-favorites">My favorites</button>
+
+      <h2>Quick start</h2>
+      <p class="hint">Pick a ready-made collection</p>
+      <select id="profile-select"></select>
+      <button type="button" class="btn primary" id="btn-profile">Use this profile</button>
+      <button type="button" class="btn" id="btn-clear">Clear script</button>
+
+      <h2>Browse by topic</h2>
+      <select id="category" size="12"></select>
+
+      <h2>Command type</h2>
+      <label><input type="radio" name="shell" value="all" checked /> All</label>
+      <label><input type="radio" name="shell" value="cmd" /> CMD</label>
+      <label><input type="radio" name="shell" value="powershell" /> PowerShell</label>
+      <label><input type="radio" name="shell" value="bash" /> Bash</label>
+    </aside>
+
+    <main class="center">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Commands</h2>
+          <span id="list-count" class="muted"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="cmd-table">
+            <thead>
+              <tr>
+                <th>★</th>
+                <th>Command name</th>
+                <th>What it does</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>About this command</h2>
+        <pre id="detail" class="detail-box">Select a command to see details.</pre>
+      </div>
+    </main>
+
+    <section class="right">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 id="builder-title">Your script</h2>
+          <button type="button" class="btn small" id="btn-clear-builder">Start over</button>
+        </div>
+        <div id="builder-list" class="builder-list"></div>
+      </div>
+
+      <div class="panel options">
+        <span class="label">Save as:</span>
+        <label><input type="radio" name="format" value="auto" checked /> Automatic</label>
+        <label><input type="radio" name="format" value="bat" /> Batch file</label>
+        <label><input type="radio" name="format" value="ps1" /> PowerShell</label>
+        <label><input type="radio" name="format" value="sh" /> Linux shell</label>
+        <label class="chk"><input type="checkbox" id="opt-errors" checked /> Show errors</label>
+        <label class="chk"><input type="checkbox" id="opt-header" checked /> Title lines</label>
+        <label class="chk"><input type="checkbox" id="opt-comments" checked /> Notes in script</label>
+        <span id="format-hint" class="muted"></span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Preview</h2>
+          <button type="button" class="btn primary" id="btn-download">Download script</button>
+        </div>
+        <pre id="preview" class="preview-box">Add commands to build your script.</pre>
+      </div>
+    </section>
+  </div>
+
+  <footer class="status-bar">
+    <span id="status">Ready</span>
+    <span class="credit">{{ app_credit }}</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

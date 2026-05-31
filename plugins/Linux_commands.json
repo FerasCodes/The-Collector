@@ -1,0 +1,260 @@
+[
+  {
+    "Command_Name": "Create a folder on the current user's Desktop named after hostname",
+    "terminal_type": "COMMAND",
+    "category": "Must",
+    "Command": [
+      "hostname=$(hostname)",
+      "mkdir -p ~/Desktop/$hostname"
+    ]
+  },
+  {
+    "Command_Name": " system information (uname)",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "uname -a >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " disk usage information",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "df -h >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " memory usage information",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "free -h >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " network interfaces information",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "ip addr show >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " active processes",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "ps aux >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " firewall rules rules",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "/sbin/iptables -L -n -v >> ~/Desktop/$hostname/system_info.txt 2>/dev/null",
+      "/sbin/iptables- >> ~/Desktop/$hostname/system_info.txt 2>/dev/null",
+      "nft list ruleset >> ~/Desktop/$hostname/system_info.txt 2>/dev/null",
+      "firewall-cmd --list-all >> ~/Desktop/$hostname/system_info.txt 2>/dev/null",
+      "ufw status verbose >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " scheduled at jobs information",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /var/spool/at/* >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " audit log files",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /var/log/audit/* >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " crontab files",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /etc/crontab >> ~/Desktop/$hostname/system_info.txt 2>/dev/null",
+      "cat /etc/cron.d/* >> ~/Desktop/$hostname/system_info.txt 2>/dev/null",
+      "cat /var/spool/cron/* >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " hostname",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "echo $hostname >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " users information",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /etc/passwd >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " home directory listing",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "ls /home/* >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " routing table",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "ip route show >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " DNS configuration",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /etc/resolv.conf >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " list of network connections",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "ss -tuln >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " list of active services",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "systemctl list-units --type=service >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " list of startup services",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "systemctl list-unit-files --type=service >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " SELinux status",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "sestatus >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " sudo users",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "grep '^sudo' /etc/group >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " installed packages (Debian-based)",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "dpkg -l >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " kernel logs",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "dmesg >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " authentication logs (Debian-based)",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /var/log/auth.log >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " authentication logs (RHEL-based)",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /var/log/secure >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " logical volumes (LVM)",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "lvdisplay >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " physical volumes (LVM)",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "pvdisplay >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  },
+  {
+    "Command_Name": " RAID configuration",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "cat /proc/mdstat >> ~/Desktop/$hostname/system_info.txt"
+    ]
+  },
+  {
+    "Command_Name": " system boot logs",
+    "terminal_type": "COMMAND",
+    "category": "Basic",
+    "Command": [
+      "hostname=$(hostname)",
+      "journalctl -b >> ~/Desktop/$hostname/system_info.txt 2>/dev/null"
+    ]
+  }
+]
